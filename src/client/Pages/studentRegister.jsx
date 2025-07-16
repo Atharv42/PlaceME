@@ -33,7 +33,7 @@ export default function userRegister() {
             alert('First and Last names should only contain letters');
             return;
         } else {
-        axios.post('http://localhost:3000/api/Studentregister', {firstName, lastName, email, password, confirmPassword})
+        axios.post('http://localhost:3000/api/Studentregister', {firstName, lastName, email, password, confirmPassword, contact, address, education, skills, experience, resumeUrl})
         .then(res => console.log(res))
         .catch(err => console.error(err));
         console.log('User registered:', { firstName, lastName, email, password, confirmPassword });

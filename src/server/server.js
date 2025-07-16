@@ -7,6 +7,8 @@ import cors from 'cors';
 import Company from './models/newCompany.js';
 import Student from './models/newStudent-schema.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from './config.js';
 
 app.use(express.json());
 app.use(cors());
@@ -55,32 +57,26 @@ app.post('/api/companyRegister', async (req, res) => {
 });
 
 app.post('/api/login', async (req, res) => {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (email && password) {
-        try {
-            const user = await Student.findOne({ email });
-            const company = await Company.findOne({ companyEmail: email });
-            // If you are hashing passwords, you should compare the hashed password
-            const isMatch = bcrypt.compareSync(password, user.password);
-            const isCompanyMatch = bcrypt.compareSync(password, company.companyPassword);
-            if (!isMatch || !isCompanyMatch) {
-                return res.status(401).json({ message: "Invalid email or password" });
-            }
-            // console.log(user);
-            if (user || company) {
-                console.log('Login successful');
-                res.status(200).json({ message: "Login successful" });
-            } else {
-                res.status(401).json({ message: "Invalid email or password" });
-            }
-        } catch (error) {
-            console.error('Error during login:', error);
-            res.status(500).json({ message: "Server error", error: error.message });
-        }
-    } else {
-        res.status(400).json({ message: "Invalid credentials" });
+  if (email && password) {
+    try {
+      const user = await Student.findOne({ email });
+      if (!user) return res.status(401).json({ message: 'Invalid email or password' });
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) return res.status(401).json({ message: 'Invalid email or password' });
+
+      // If we reach this point, the password is valid, so we can generate a JWT token
+      const token = jwt.sign({ userId: user._id }, config.secretKey, { expiresIn: '1h' });
+      res.status(200).json({ message: 'Login successful', token });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Server error' });
     }
+  } else {
+    res.status(400).json({ message: 'Invalid credentials' });
+  }
 });
 
 app.listen(3000, () => {

@@ -1,0 +1,1 @@
+export default { secretKey: 'REDACTED_ROTATE_JWT_SECRET' };
