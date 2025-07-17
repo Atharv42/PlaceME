@@ -12,7 +12,6 @@ import UpdateProfile from  './Pages/updateProfile.jsx';
 import BrowseJobs from './Pages/browseJobs.jsx';
 import ViewResume from './Pages/viewResume.jsx';
 
-
 createRoot(document.getElementById('root')).render(
   <>
     <Router>
