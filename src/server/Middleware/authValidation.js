@@ -1,3 +1,5 @@
+// src/server/Middleware/authValidation.js
+
 import joi from 'joi';
 
 const StudentSignup = (req, res, next) => {
@@ -11,7 +13,7 @@ const StudentSignup = (req, res, next) => {
         education: joi.string().min(2).max(100).required(),
         skills: joi.string().min(2).max(100).required(),
         experience: joi.string().min(1).max(100).required(),
-        // resume: joi.string().uri().required() // assuming it's a link or path
+        resumeUrl: joi.string().uri().required() // Corrected field name
     });
 
     const { error } = Schema.validate(req.body);
@@ -48,4 +50,24 @@ const LoginValidation = (req, res, next) => {
     next();
 };
 
-export { StudentSignup, CompanySignup, LoginValidation };
+const JobPostingValidation = (req, res, next) => {
+    const Schema = joi.object({
+        companyId: joi.string().required(),
+        title: joi.string().min(3).max(100).required(),
+        description: joi.string().min(10).required(),
+        location: joi.string().min(2).max(100).required(),
+        skillsRequired: joi.array().items(joi.string()).min(1).required(), // Expect an array of strings
+        deadline: joi.date().iso().greater('now').required(),
+        postedDate: joi.date().iso().required(),
+        company: joi.string().required()
+    });
+
+    const { error } = Schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+    next();
+};
+
+
+export { StudentSignup, CompanySignup, LoginValidation, JobPostingValidation }; 

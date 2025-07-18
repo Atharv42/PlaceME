@@ -101,7 +101,7 @@ const Login = async (req, res) => {
         };
 
         const token = jwt.sign(tokenPayload, process.env.JWT_SECRET || 'REDACTED_ROTATE_JWT_SECRET', { expiresIn: '1h' });
-
+        console.log(userType);
         res.status(200).json({
             message: "Login successful",
             token,
