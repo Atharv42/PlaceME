@@ -13,12 +13,25 @@ import BrowseJobs from './Pages/browseJobs.jsx';
 import ViewResume from './Pages/viewResume.jsx';
 import Home from './Pages/home.jsx';
 
+const PrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+};
+
 createRoot(document.getElementById('root')).render(
   <>
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
+        <Route
+        path="/dashboard"
+        element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>
+        }
+      />
         <Route path="/register" element={<Register />} />
         <Route path="*" element={<Home />} />
         <Route path="/company" element={<CompanyRegister />} />

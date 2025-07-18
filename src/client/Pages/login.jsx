@@ -1,28 +1,53 @@
-// Login.jsx (React Component)
 import React, { useState } from "react";
-import './Login.css'; // Refer to the CSS below
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "./Login.css";
 
-function Login({ onLogin }) {
+function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Validate and call your login API here
+
     if (!email || !password) {
       setError("Both fields are required.");
       return;
     }
-    // Replace with actual authentication logic
-    onLogin && onLogin(email, password);
-    
+
+    try {
+      const res = await axios.post("http://localhost:3000/api/login", {
+        email,
+        password,
+      });
+
+      const { token, role, userId } = res.data;
+
+      // Save token and user info to localStorage
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role);
+      localStorage.setItem("userId", userId);
+
+      // Redirect to dashboard after login
+      navigate("/dashboard");
+
+    } catch (err) {
+      if (err.response && err.response.data && err.response.data.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Login failed. Please try again.");
+      }
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
-        <div className="login-logo">Place<span className="accent">ME</span></div>
+        <div className="login-logo">
+          Place<span className="accent">ME</span>
+        </div>
         <h2 className="login-title">Welcome Back!</h2>
         <form onSubmit={handleSubmit}>
           <label className="login-label" htmlFor="email">Email</label>

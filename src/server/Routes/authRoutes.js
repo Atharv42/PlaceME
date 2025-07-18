@@ -1,15 +1,31 @@
-import Routes from 'express';
-const routes = Routes.Router();
-import { StudentSignup, CompanySignup, LoginValidation } from '../Middleware/authValidation.js';
-import { Login, StudentSignUp, CompanySignUp } from '../Controllers/authController.js';
-// import express from 'express';
-// import cors from 'cors';
+import express from 'express';
+const router = express.Router();
 
+import {
+    StudentSignUp,
+    CompanySignUp,
+    Login
+} from '../Controllers/authController.js';
 
-routes.post('/Studentregister', StudentSignup, StudentSignUp);
+import {
+    StudentSignup,
+    CompanySignup,
+    LoginValidation
+} from '../Middleware/authValidation.js';
 
-routes.post('/companyRegister', CompanySignup, CompanySignUp);
+import { verifyToken, checkRole } from '../Middleware/authMiddleware.js';
 
-routes.post('/login', LoginValidation, Login);
+// Routes
+router.post('/student-register', StudentSignup, StudentSignUp);
+router.post('/company-register', CompanySignup, CompanySignUp);
+router.post('/login', LoginValidation, Login);
 
-export default routes;
+// Protected Example Route
+router.get('/dashboard', verifyToken, (req, res) => {
+    res.status(200).json({
+        message: 'Protected dashboard accessed!',
+        user: req.user
+    });
+});
+
+export default router;
