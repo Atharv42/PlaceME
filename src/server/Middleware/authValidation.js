@@ -69,5 +69,20 @@ const JobPostingValidation = (req, res, next) => {
     next();
 };
 
+const ApplyJobValidation = (req, res, next) => {
+    const Schema = joi.object({
+        jobId: joi.string().required(),
+        studentId: joi.string().required(),
+        // status is typically 'Pending' or 'Applied' and set by default on backend
+        // appliedDate is typically set by default on backend
+    });
 
-export { StudentSignup, CompanySignup, LoginValidation, JobPostingValidation }; 
+    const { error } = Schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+    next();
+};
+
+
+export { StudentSignup, CompanySignup, LoginValidation, JobPostingValidation, ApplyJobValidation }; 

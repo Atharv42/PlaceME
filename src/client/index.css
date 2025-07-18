@@ -436,3 +436,50 @@ body {
     padding: 6px 10px;
   }
 }
+
+.header-logout-button {
+  background: none;
+  border: 1px solid #f3f3f3; /* Light border */
+  color: #f3f3f3;
+  margin-left: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.16s, color 0.16s, border-color 0.16s;
+}
+
+.header-logout-button:hover {
+  background: #2980b9; /* Match active nav link hover */
+  border-color: #2980b9;
+  color: #fff;
+}
+
+/* Ensure default header nav a styles are applied if you keep <a> tag for logout */
+.header nav a {
+  color: #f3f3f3;
+  margin-left: 20px;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 3px;
+  transition: background 0.16s, color 0.16s;
+}
+.header nav a:hover, .header nav a.active {
+  background: #2980b9;
+  color: #fff;
+}
+
+
+/* .job-listing {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.list-item-action{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+} */

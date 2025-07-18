@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { connectDb } from './db.js';
 import authRoutes from './Routes/authRoutes.js';
-import jobRoutes from './Routes/jobRoutes.js'; // Import the new job routes
+import jobRoutes from './Routes/jobRoutes.js';
+import applicationRoutes from './Routes/applicationRoutes.js'; // Import the new application routes
 
 dotenv.config();
 const app = express();
@@ -19,7 +20,8 @@ app.get('/', (req, res) => {
     res.send('Welcome to the PlaceME API');
 });
 app.use('/api', authRoutes);
-app.use('/api', jobRoutes); // Use the new job routes
+app.use('/api', jobRoutes);
+app.use('/api', applicationRoutes); // Use the new application routes
 
 // Start server
 app.listen(3000, () => {
