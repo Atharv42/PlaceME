@@ -15,7 +15,7 @@ const StudentSignUp = async (req, res) => {
             education,
             skills,
             experience,
-            resume
+            // resume
         } = req.body;
 
         const existingStudent = await Student.findOne({ email });
@@ -35,7 +35,7 @@ const StudentSignUp = async (req, res) => {
             education,
             skills,
             experience,
-            resume
+            // resume
         });
 
         await newStudent.save();
@@ -108,6 +108,7 @@ const Login = async (req, res) => {
             role: userType,
             userId: user._id
         });
+        alert("Login successful");
 
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

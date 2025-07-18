@@ -1,4 +1,5 @@
 import React from 'react';
+import LogoutButton from './Pages/logOutbutton';
 
 export default function Header() {
     return(
@@ -8,7 +9,7 @@ export default function Header() {
             <nav>
                 <a href="/dashboard">Home</a>
                 <a href="dashboard/updateprofile">My Profile</a>
-                <a href="/login">Logout</a>
+                <LogoutButton />
             </nav>
         </header>
         </>

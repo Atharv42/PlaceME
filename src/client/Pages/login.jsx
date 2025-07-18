@@ -1,3 +1,4 @@
+// src/client/Pages/login.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -30,8 +31,14 @@ function Login() {
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
 
-      // Redirect to dashboard after login
-      navigate("/dashboard");
+      // Redirect to appropriate dashboard based on role
+      if (role === 'student') {
+        navigate("/dashboard"); // Redirect students to student dashboard
+      } else if (role === 'company') {
+        navigate("/company-dashboard"); // Redirect companies to company dashboard
+      } else {
+        navigate("/"); // Default redirect if role is unknown
+      }
 
     } catch (err) {
       if (err.response && err.response.data && err.response.data.message) {

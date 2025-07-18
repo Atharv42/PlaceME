@@ -1,98 +1,103 @@
-import React from 'react';
+// src/components/StudentRegister.jsx
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-export default function userRegister() {
-    const navigate = useNavigate();
-    const [firstName, setFirstName] = React.useState('');
-    const [lastName, setLastName] = React.useState('');
-    const [contact, setContact] = React.useState('');
-    const [address, setAddress] = React.useState('');
-    const [education, setEducation] = React.useState('');
-    const [skills, setSkills] = React.useState('');
-    const [experience, setExperience] = React.useState('');
-    const [resumeUrl, setResumeUrl] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [confirmPassword, setConfirmPassword] = React.useState('');
 
-    function handleSubmit(e) {
-        e.preventDefault();
-        if(!firstName || !lastName || !email || !password || !confirmPassword) {
-            alert('Please fill in all fields');
-            return;
-        }   else if (password !== confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        } else if (password.length < 6) {
-            alert('Password must be at least 6 characters long');
-            return;
-        } else if (!/\S+@\S+\.\S+/.test(email)) {
-            alert('Please enter a valid email address');
-            return;
-        } else if (!/^[a-zA-Z]+$/.test(firstName) || !/^[a-zA-Z]+$/.test(lastName)) {
-            alert('First and Last names should only contain letters');
-            return;
-        } else {
-        axios.post('http://localhost:3000/api/Studentregister', {firstName, lastName, email, password, confirmPassword, contact, address, education, skills, experience, resumeUrl})
-        .then(res => console.log(res))
-        .catch(err => console.error(err));
-        console.log('User registered:', { firstName, lastName, email, password, confirmPassword });
-        navigate('/login'); // Redirect to login page after successful registration
-        }
+export default function StudentRegister() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    contact: '',
+    address: '',
+    education: '',
+    skills: '',
+    experience: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const {
+      firstName, lastName, contact, address, education,
+      skills, experience, email, password, confirmPassword
+    } = formData;
+
+    // Simple validations
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      alert("Please fill in all required fields.");
+      return;
     }
-    return (
-        <>
-            <div className="register-container">
-                <h2 className="register-title"> Register </h2>
-                <form onSubmit={handleSubmit}>
-                    <label className="register-label">First Name</label>
-                    <input onChange={(e) => setFirstName(e.target.value)} type="text" placeholder="First Name" className="input" />
-                    <br />
 
-                    <label className="register-label">Last Name</label>
-                    <input onChange={(e) => setLastName(e.target.value)} type="text" placeholder="Last Name" className="input" />
-                    <br />
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
 
-                    <label className="register-label">Contact No.</label>
-                    <input onChange={(e) => setContact(e.target.value)} type="text" placeholder="Contact No." className="input" />
-                    <br />
+    try {
+      await axios.post("http://localhost:3000/api/student-register", {
+        firstName,
+        lastName,
+        email,
+        password,
+        contact,
+        address,
+        education,
+        skills,
+        experience,
+        // resumeUrl
+      });
 
-                    <label className="register-label">Address</label>
-                    <input onChange={(e) => setAddress(e.target.value)} type="text" placeholder="Address" className="input" />
-                    <br />
+      alert("Student registered successfully!");
+      navigate("/login");
 
-                    <label className="register-label">Education</label>
-                    <input onChange={(e) => setEducation(e.target.value)} type="text" placeholder="Education" className="input" />
-                    <br />
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Registration failed. Check your inputs or try again later.");
+    }
+  };
 
-                    <label className="register-label">Skills</label>
-                    <input onChange={(e) => setSkills(e.target.value)} type="text" placeholder="Skills" className="input" />
-                    <br />
+  return (
+    <div className="register-container">
+      <h2 className="register-title">Student Registration</h2>
+      <form onSubmit={handleSubmit}>
+        {[
+          { label: 'First Name', name: 'firstName', type: 'text' },
+          { label: 'Last Name', name: 'lastName', type: 'text' },
+          { label: 'Contact No.', name: 'contact', type: 'text' },
+          { label: 'Address', name: 'address', type: 'text' },
+          { label: 'Education', name: 'education', type: 'text' },
+          { label: 'Skills', name: 'skills', type: 'text' },
+          { label: 'Experience', name: 'experience', type: 'text' },
+          { label: 'Email', name: 'email', type: 'email' },
+          { label: 'Password', name: 'password', type: 'password' },
+          { label: 'Confirm Password', name: 'confirmPassword', type: 'password' },
+        ].map((input, index) => (
+          <div key={index}>
+            <label className="register-label">{input.label}</label>
+            <input
+              onChange={handleChange}
+              placeholder={input.label}
+              name={input.name}
+              type={input.type}
+              value={formData[input.name]}
+              className="input"
+              required
+            />
+          </div>
+        ))}
 
-                    <label className="register-label">Experience</label>
-                    <input onChange={(e) => setExperience(e.target.value)} type="text" placeholder="Experience" className="input" />
-                    <br />
-
-                    <label className="register-label">Resume URL</label>
-                    <input onChange={(e) => setResumeUrl(e.target.value)} type="text" placeholder="URL" className="input" />
-                    <br />
-
-                    <label className="register-label">Email</label>
-                    <input onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" className="input" />
-                    <br />
-
-                    <label className="register-label">Password</label>
-                    <input onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" className="input" />
-                    <br />
-
-                    <label className="register-label">Confirm Password</label>
-                    <input onChange={(e) => setConfirmPassword(e.target.value)} type="password" placeholder="Confirm Password" className="input" />
-                    
-                    <button className="register-button">Register</button>
-                    <p className="login-link">Already have an account? <a href="/login">Login</a></p>
-                </form>
-            </div>
-        </>
-    )
-
-};
+        <button className="register-button">Register</button>
+        <p className="login-link">Already have an account? <a href="/login">Login</a></p>
+      </form>
+    </div>
+  );
+}

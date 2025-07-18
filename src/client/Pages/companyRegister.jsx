@@ -1,64 +1,100 @@
-import react from 'react';
+// src/components/CompanyRegister.jsx
+import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-export default function companyRegister() {
-    const navigate = useNavigate();
-    const [companyName, setCompanyName] = react.useState('');
-    const [companyEmail, setCompanyEmail] = react.useState('');
-    const [companyPassword, setCompanyPassword] = react.useState('');
-    const [confirmPassword, setConfirmPassword] = react.useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if(!companyName || !companyEmail || !companyPassword || !confirmPassword) {
-            alert('Please fill in all fields');
-            return;
-        }   else if (companyPassword !== confirmPassword) {
-            alert('Passwords do not match');
-            return;
-        } else if (companyPassword.length < 6) {
-            alert('Password must be at least 6 characters long');
-            return;
-        } else if (!/\S+@\S+\.\S+/.test(companyEmail)) {
-            alert('Please enter a valid email address');
-            return;
-        } else if (!/^[a-zA-Z]+$/.test(companyName) || !/^[a-zA-Z]+$/.test(companyName)) {
-            alert('First and Last names should only contain letters');
-            return;
-        } else {
-        axios.post('http://localhost:3000/api/companyRegister', {
-            companyName,
-            companyEmail,
-            companyPassword,
-        }).then(res => {
-            console.log(res);
-            alert('Company registered successfully');
-            
-            navigate('/login'); // Redirect to login page after successful registration
-        }).catch(err => console.error(err));
+export default function CompanyRegister() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    companyName: '',
+    companyEmail: '',
+    companyPassword: '',
+    confirmPassword: ''
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { companyName, companyEmail, companyPassword, confirmPassword } = formData;
+
+    if (!companyName || !companyEmail || !companyPassword || !confirmPassword) {
+      alert("Please fill all fields.");
+      return;
     }
-    };
-    return (
-        <>
-            <div className="register-container">
-                <h1>Register your Company with PlaceME!!!</h1>
-                <form onSubmit={handleSubmit}>
-                    <label className="register-label">Company Name</label>
-                    <input onChange={(e) => setCompanyName(e.target.value)} required type="text" placeholder="Company Name" className="input" />
-                    <br />
-                    <label className="register-label">Email</label>
-                    <input onChange={(e) => setCompanyEmail(e.target.value)} required type="email" placeholder="Email" className="input" />
-                    <br />
-                    <label className="register-label">Password</label>
-                    <input onChange={(e) => setCompanyPassword(e.target.value)} required type="password" placeholder="Password" className="input" />
-                    <br />
-                    <label className="register-label">Confirm Password</label>
-                    <input onChange={(e) => setConfirmPassword(e.target.value)} required type="password" placeholder="Confirm Password" className="input" />
-                    <br />
-                    <button className="register-button">Register</button>
-                </form>
-                <p className="login-link">Already have an account? <a href="/login">Login</a></p>
-            </div>
-        </>
-    )
+
+    if (companyPassword !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await axios.post("http://localhost:3000/api/company-register", {
+        companyName,
+        companyEmail,
+        companyPassword
+      });
+
+      alert("Company registered successfully!");
+      navigate("/login");
+
+    } catch (error) {
+      console.error("Company Registration Failed:", error);
+      alert("Company registration failed.");
+    }
+  };
+
+  return (
+    <div className="register-container">
+      <h2 className="register-title">Register Your Company</h2>
+      <form onSubmit={handleSubmit}>
+        <label className="register-label">Company Name</label>
+        <input
+          onChange={handleChange}
+          type="text"
+          name="companyName"
+          placeholder="Company Name"
+          className="input"
+          required
+        />
+
+        <label className="register-label">Email</label>
+        <input
+          onChange={handleChange}
+          type="email"
+          name="companyEmail"
+          placeholder="Official Email"
+          className="input"
+          required
+        />
+
+        <label className="register-label">Password</label>
+        <input
+          onChange={handleChange}
+          type="password"
+          name="companyPassword"
+          placeholder="Password"
+          className="input"
+          required
+        />
+
+        <label className="register-label">Confirm Password</label>
+        <input
+          onChange={handleChange}
+          type="password"
+          name="confirmPassword"
+          placeholder="Confirm Password"
+          className="input"
+          required
+        />
+
+        <button className="register-button">Register</button>
+        <p className="login-link">Already have an account? <a href="/login">Login</a></p>
+      </form>
+    </div>
+  );
 }

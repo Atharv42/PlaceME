@@ -11,7 +11,7 @@ const StudentSignup = (req, res, next) => {
         education: joi.string().min(2).max(100).required(),
         skills: joi.string().min(2).max(100).required(),
         experience: joi.string().min(1).max(100).required(),
-        resume: joi.string().uri().required() // assuming it's a link or path
+        // resume: joi.string().uri().required() // assuming it's a link or path
     });
 
     const { error } = Schema.validate(req.body);
