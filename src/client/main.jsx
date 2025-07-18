@@ -11,15 +11,16 @@ import CompanyRegister from './Pages/companyRegister.jsx';
 import UpdateProfile from  './Pages/updateProfile.jsx';
 import BrowseJobs from './Pages/browseJobs.jsx';
 import ViewResume from './Pages/viewResume.jsx';
+import Home from './Pages/home.jsx';
 
 createRoot(document.getElementById('root')).render(
   <>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="*" element={<Login />} />
+        <Route path="*" element={<Home />} />
         <Route path="/company" element={<CompanyRegister />} />
         <Route path="/student" element={<UserRegister />} />
         <Route path="/Dashboard" element={<Dashboard />} />

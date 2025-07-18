@@ -1,36 +1,60 @@
-import React from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+// Login.jsx (React Component)
+import React, { useState } from "react";
+import './Login.css'; // Refer to the CSS below
 
-export default function Login(){
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const Navigate = useNavigate();
+function Login({ onLogin }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-    function handleSubmit(e){
-        e.preventDefault();
-        axios.post('http://localhost:3000/api/login', {email, password})
-        .then(res => {
-            console.log(res);
-            Navigate('/dashboard'); // Redirect to dashboard on successful login
-        })
-        .catch(err => console.error(err));
-    };
-    return(
-        <>
-            <div className="login-container">
-                <h2 className="login-title"> Login </h2>
-                <form onSubmit={handleSubmit}>
-                    <label className="login-label">Email</label>
-                    <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email" required className="input"/>
-                    <br/>
-                    <label className="login-label">Password</label>
-                    <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder="Password" required className="input"/>
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validate and call your login API here
+    if (!email || !password) {
+      setError("Both fields are required.");
+      return;
+    }
+    // Replace with actual authentication logic
+    onLogin && onLogin(email, password);
+    
+  };
 
-                    <button className="login-button">Login</button>
-                    <p className="register-link">Don't have an account? <a href="/register">Register  </a></p>
-                </form>
-            </div>
-        </>
-    );
+  return (
+    <div className="login-container">
+      <div className="login-box">
+        <div className="login-logo">Place<span className="accent">ME</span></div>
+        <h2 className="login-title">Welcome Back!</h2>
+        <form onSubmit={handleSubmit}>
+          <label className="login-label" htmlFor="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            className="login-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            autoComplete="email"
+            required
+          />
+          <label className="login-label" htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            className="login-input"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+            required
+          />
+          {error && <div className="login-error">{error}</div>}
+          <button className="login-button" type="submit">Sign In</button>
+        </form>
+        <div className="login-links">
+          <a href="/register" className="login-link">Don’t have an account? Register</a>
+          <a href="/forgot" className="login-link">Forgot Password?</a>
+        </div>
+      </div>
+    </div>
+  );
 }
+
+export default Login;

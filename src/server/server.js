@@ -13,11 +13,10 @@ import auth from './Routes/authRoutes.js';
 
 app.use(express.json());
 app.use(cors());
-app.use('/api', auth);
-
-app.get('/login', (req, res) => {
-    res.json({ message: "Login endpoint" });
+app.get('/', (req, res) => {
+    res.send('Welcome to the PlaceME API');
 });
+app.use('/api', auth);
 
 app.listen(3000, () => {
     connectDb();

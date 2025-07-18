@@ -47,8 +47,15 @@ const CompanySignUp = async (req, res) => {
 const Login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        // Here you would typically check the credentials against the database
-        // For now, we will just return a success message
+        const user = await Student.findOne({ email }) || await Company.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+        const token = jwt.sign({ email }, 'REDACTED_ROTATE_JWT_SECRET', { expiresIn: '1h' });  // Replace 'your-secret-key' with your own secret key
         res.status(200).json({ message: "Login successful", data: { email } });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
