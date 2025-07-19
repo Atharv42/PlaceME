@@ -1,3 +1,4 @@
+// src/server/models/applicationSchema.js
 import mongoose from "mongoose";
 
 const applicationSchema = new mongoose.Schema({
@@ -21,5 +22,6 @@ const applicationSchema = new mongoose.Schema({
     timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
 
-const Application = mongoose.model('Application', applicationSchema);
+// Check if the model already exists before compiling
+const Application = mongoose.models.Application || mongoose.model('Application', applicationSchema);
 export default Application;

@@ -1,3 +1,4 @@
+// src/server/models/jobSchema.js
 import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema({
@@ -35,5 +36,6 @@ const jobSchema = new mongoose.Schema({
     }
 });
 
-const Job = mongoose.model('Job', jobSchema);
+// Check if the model already exists before compiling
+const Job = mongoose.models.Job || mongoose.model('Job', jobSchema);
 export default Job;

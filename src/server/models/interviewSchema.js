@@ -1,3 +1,4 @@
+// src/server/models/interviewSchema.js
 import mongoose from "mongoose";
 
 const interviewSchema = new mongoose.Schema({
@@ -33,5 +34,6 @@ const interviewSchema = new mongoose.Schema({
     timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
 
-const Application = mongoose.model('Interview', interviewSchema);
-export default Application;
+// Check if the model already exists before compiling
+const Interview = mongoose.models.Interview || mongoose.model('Interview', interviewSchema);
+export default Interview;

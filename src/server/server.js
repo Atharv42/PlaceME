@@ -6,7 +6,9 @@ import cors from 'cors';
 import { connectDb } from './db.js';
 import authRoutes from './Routes/authRoutes.js';
 import jobRoutes from './Routes/jobRoutes.js';
-import applicationRoutes from './Routes/applicationRoutes.js'; // Import the new application routes
+import applicationRoutes from './Routes/applicationRoutes.js';
+import interviewRoutes from './Routes/interviewRoutes.js';
+import studentRoutes from './Routes/studentRoutes.js'; // Import new student routes
 
 dotenv.config();
 const app = express();
@@ -21,7 +23,9 @@ app.get('/', (req, res) => {
 });
 app.use('/api', authRoutes);
 app.use('/api', jobRoutes);
-app.use('/api', applicationRoutes); // Use the new application routes
+app.use('/api', applicationRoutes);
+app.use('/api', interviewRoutes);
+app.use('/api', studentRoutes); // Use new student routes
 
 // Start server
 app.listen(3000, () => {

@@ -191,7 +191,7 @@ export default function CompanyDashboard() {
                     ) : (
                         <ul>
                             {jobs.map((job) => (
-                                <li key={job._id} className="job-listing" style={{ margin: '10px 0' }}>
+                                <li key={job._id} className="job-listing-candidate" style={{ margin: '10px 0' }}>
                                     <div>
                                         <h3 className="job-title">{job.title}</h3>
                                         <h5 className="company-name">{job.company}</h5>
@@ -218,7 +218,7 @@ export default function CompanyDashboard() {
                     ) : (
                         <ul>
                             {applications.map((app) => (
-                                <li key={app._id} className="job-listing" style={{ margin: '10px 0' }}> {/* Used _id here for consistency */}
+                                <li key={app._id} className="job-listing-candidate" style={{ margin: '10px 0' }}> {/* Used _id here for consistency */}
                                     <div>
                                         <p><strong>Job:</strong> {app.jobTitle}</p>
                                         <p><strong>Applicant:</strong> {app.studentName}</p>

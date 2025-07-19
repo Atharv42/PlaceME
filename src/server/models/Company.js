@@ -1,3 +1,4 @@
+// src/server/models/Company.js
 import mongoose from 'mongoose';
 
 const companySchema = new mongoose.Schema({
@@ -18,5 +19,6 @@ const companySchema = new mongoose.Schema({
     timestamps: true, // Automatically manage createdAt and updatedAt fields
 });
 
-const Company = mongoose.model('Company', companySchema);
+// Check if the model already exists before compiling
+const Company = mongoose.models.Company || mongoose.model('Company', companySchema);
 export default Company;
