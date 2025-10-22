@@ -1,9 +1,9 @@
 // src/client/Pages/dashboard.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom'; // Make sure Link is imported
 import Header from "../header.jsx";
-import '../index.css'; // Reusing general styles for buttons and containers
+import '../index.css'; 
 
 export default function Dashboard() {
     const navigate = useNavigate();
@@ -91,7 +91,7 @@ export default function Dashboard() {
                             {interviews.map((interview) => (
                                 <li key={interview._id}>
                                     <div className="list-item-details">
-                                        <strong>{interview.jobTitle || 'Job Title N/A'}</strong> at <span style={{ fontWeight: 'bold', color: 'blue' }}>{interview.companyName}</span><br />
+                                        <strong>{interview.jobTitle}</strong> at <span style={{ fontWeight: 'bold', color: 'blue' }}>{interview.companyName}</span><br />
                                         Date: {new Date(interview.date).toLocaleDateString()} | Time: {interview.time}
                                     </div>
                                     <div className="list-item-action">
@@ -113,7 +113,8 @@ export default function Dashboard() {
                         <p>No applications found yet.</p>
                     ) : (
                         <ul>
-                            {applications.map((app) => (
+                            {/* Show only the 5 most recent applications */}
+                            {applications.slice(0, 5).map((app) => (
                                 <li key={app._id}>
                                     <div className="list-item-details">
                                         <strong>{app.jobTitle}</strong> at <span style={{ fontWeight: 'bold', color: 'blue' }}>{app.companyName}</span> - <span>{app.status}</span>
@@ -123,8 +124,11 @@ export default function Dashboard() {
                         </ul>
                     )}
                     <p className="view-all">
-                        {/* This link should eventually lead to a page showing all applications in detail */}
-                        <a href="#" className="button">View All Applications</a>
+                        {/* --- THIS IS THE CHANGE --- */}
+                        <Link to="/dashboard/applications" className="button">
+                            View All Applications
+                        </Link>
+                        {/* --- END CHANGE --- */}
                     </p>
                 </div>
 

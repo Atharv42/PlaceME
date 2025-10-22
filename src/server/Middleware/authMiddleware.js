@@ -1,3 +1,5 @@
+// src/server/Middleware/authMiddleware.js
+
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req, res, next) => {
@@ -10,7 +12,11 @@ export const verifyToken = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'REDACTED_ROTATE_JWT_SECRET');
+        // --- THIS IS THE FIX ---
+        // Removed the hardcoded fallback
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+        // --- END FIX ---
+
         req.user = decoded;
         next();
     } catch (error) {

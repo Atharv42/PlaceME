@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from '../header.jsx'; // Assuming you want to reuse the existing header
-import '../index.css'; // Reusing general styles for buttons and containers
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import Header from '../header.jsx'; 
+import '../index.css'; 
+import { Link } from 'react-router-dom'; 
 
 export default function UpdateProfile() {
     const navigate = useNavigate();
@@ -19,9 +19,16 @@ export default function UpdateProfile() {
         experience: '',
         resumeUrl: '',
     });
+
+    // --- NEW STATES FOR FILE UPLOAD ---
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    // --- END NEW STATES ---
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false); 
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -31,11 +38,10 @@ export default function UpdateProfile() {
                 const studentId = localStorage.getItem('userId');
 
                 if (!token || role !== 'student') {
-                    navigate('/login'); // Redirect if not logged in as a student
+                    navigate('/login'); 
                     return;
                 }
 
-                // Fetch student's current profile data
                 const res = await axios.get(`http://localhost:3000/api/student/profile/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
@@ -71,43 +77,109 @@ export default function UpdateProfile() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = async (e) => {
+    // --- NEW HANDLER for file selection ---
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type !== 'application/pdf') {
+            setError('Only .pdf files are allowed.');
+            setSelectedFile(null);
+            e.target.value = null; // Clear the input
+        } else if (file && file.size > 5 * 1024 * 1024) { // 5MB limit
+             setError('File is too large. Max 5MB allowed.');
+             setSelectedFile(null);
+             e.target.value = null; // Clear the input
+        } else {
+            setSelectedFile(file);
+            setError(''); // Clear any previous file errors
+        }
+    };
+    // --- END NEW HANDLER ---
+
+    // --- UPDATED: This now only handles text profile data ---
+    const handleProfileSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setSuccessMessage('');
+        setIsSubmitting(true);
 
         try {
             const token = localStorage.getItem('token');
             const studentId = localStorage.getItem('userId');
-
-            // Construct update data, only sending fields that might have changed
-            const updateData = {};
-            for (const key in formData) {
-                // You might want a more sophisticated check here, e.g.,
-                // if formData[key] !== initialProfileData[key]
-                // but for now, sending all form data is fine given optional Joi schema.
-                updateData[key] = formData[key];
-            }
-
-
+            
+            const updateData = {
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                email: formData.email,
+                contact: formData.contact,
+                address: formData.address,
+                education: formData.education,
+                skills: formData.skills,
+                experience: formData.experience,
+                // resumeUrl is now handled separately
+            };
+            
             const res = await axios.put(`http://localhost:3000/api/student/profile/${studentId}`, updateData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            setSuccessMessage(res.data.message);
-            // Optionally, update formData with the response to ensure consistency if backend applies any transformations
-            setFormData(res.data.student);
-            alert(res.data.message); // For immediate feedback
+            setSuccessMessage(res.data.message); 
+            setFormData(res.data.student); 
 
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
-                setError(err.response.data.message);
-                alert(err.response.data.message);
+                setError(err.response.data.message); 
             } else {
-                setError('Failed to update profile. Please try again.');
-                alert('Failed to update profile. Please try again.');
+                setError('Failed to update profile. Please try again.'); 
             }
             console.error('Update profile error:', err);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // --- NEW FUNCTION: Handle just the resume upload ---
+    const handleResumeUpload = async () => {
+        if (!selectedFile) {
+            setError('Please select a PDF file to upload.');
+            return;
+        }
+        
+        setError('');
+        setSuccessMessage('');
+        setUploading(true);
+
+        const token = localStorage.getItem('token');
+        const studentId = localStorage.getItem('userId');
+        
+        const uploadFormData = new FormData();
+        uploadFormData.append('resume', selectedFile); // 'resume' MUST match backend 'upload.single('resume')'
+
+        try {
+            const res = await axios.post(
+                `http://localhost:3000/api/student/profile/${studentId}/upload-resume`,
+                uploadFormData,
+                {
+                    headers: { 
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data' // Important for file uploads
+                    }
+                }
+            );
+
+            setSuccessMessage(res.data.message);
+            // Update the form data with the new URL
+            setFormData({...formData, resumeUrl: res.data.resumeUrl});
+            setSelectedFile(null); // Clear the file input
+
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message); 
+            } else {
+                setError('Failed to upload resume. Please try again.'); 
+            }
+            console.error('Upload resume error:', err);
+        } finally {
+            setUploading(false);
         }
     };
 
@@ -128,41 +200,81 @@ export default function UpdateProfile() {
             <div className="update-profile-container">
                 <h1 className="update-profile-title">Update your profile</h1>
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '15px' }}>{error}</div>}
-                {successMessage && <div style={{ color: 'green', textAlign: 'center', marginBottom: '15px' }}>{successMessage}</div>}
+                {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '15px' }}>{successMessage}</div>}
 
-                <form onSubmit={handleSubmit}>
+                {/* --- UPDATED FORM for TEXT data --- */}
+                <form onSubmit={handleProfileSubmit}>
                     <label className="update-profile-fillup">First Name</label>
                     <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First Name" className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Last Name</label>
                     <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} placeholder="Last Name" className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Email</label>
                     <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Contact No.</label>
                     <input type="text" name="contact" value={formData.contact} onChange={handleChange} placeholder="Contact No." className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Address</label>
                     <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Address" className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Education</label>
                     <input type="text" name="education" value={formData.education} onChange={handleChange} placeholder="e.g., B.Tech Computer Science, University Name, Year" className="input" required />
-                    <br />
-                    <label className="update-profile-fillup">Skills</label>
+                    
+                    <label className="update-profile-fillup">Skills (comma-separated)</label>
                     <input type="text" name="skills" value={formData.skills} onChange={handleChange} placeholder=" e.g., Python, JavaScript, React, SQL" className="input" required />
-                    <br />
+                    
                     <label className="update-profile-fillup">Work Experience</label>
-                    <input type="text" name="experience" value={formData.experience} onChange={handleChange} placeholder="e.g., Intern at Company A, Role, Dates" className="input" required />
-                    <br />
-                    <label className="update-profile-fillup">Resume URL</label> {/* Changed from file input to URL as per schema */}
-                    <input type="text" name="resumeUrl" value={formData.resumeUrl} onChange={handleChange} placeholder="e.g., https://your-resume.com/file.pdf" className="input" required />
-                    <br />
-                    <div className="update-profile-buttons">
-                        <button type="submit" className="update-button">Update Profile</button>
-                        <Link to="/dashboard" className="update-button">Back to Dashboard</Link>
+                    <textarea 
+                        name="experience" 
+                        value={formData.experience} 
+                        onChange={handleChange} 
+                        placeholder="e.g., Intern at Company A, Role, Dates (One per line)" 
+                        className="input" 
+                        rows="4"
+                        required 
+                    />
+
+                    <div className="update-profile-buttons" style={{marginTop: '20px'}}>
+                        <button type="submit" className="button" disabled={isSubmitting}>
+                            {isSubmitting ? 'Updating Info...' : 'Update Profile Info'}
+                        </button>
                     </div>
                 </form>
+                {/* --- END TEXT FORM --- */}
+
+
+                {/* --- NEW FORM for RESUME UPLOAD --- */}
+                <hr style={{ margin: '30px 0' }} />
+                <h2 className="update-profile-title" style={{ fontSize: '20px', border: 'none', marginBottom: '20px' }}>Manage Resume</h2>
+                
+                {formData.resumeUrl && (
+                    <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+                        <a href={formData.resumeUrl} target="_blank" rel="noopener noreferrer" className="button outline">View Current Resume</a>
+                    </div>
+                )}
+                
+                <label className="update-profile-fillup">Upload New Resume (PDF only, max 5MB)</label>
+                <input 
+                    type="file" 
+                    name="resume" 
+                    onChange={handleFileChange} 
+                    className="input" 
+                    accept="application/pdf" // Only allow PDF
+                />
+                
+                <div className="update-profile-buttons" style={{marginTop: '10px'}}>
+                    <button 
+                        onClick={handleResumeUpload} 
+                        className="button" 
+                        disabled={!selectedFile || uploading}
+                    >
+                        {uploading ? 'Uploading...' : 'Upload New Resume'}
+                    </button>
+                    <Link to="/dashboard" className="button outline">Back to Dashboard</Link>
+                </div>
+                {/* --- END RESUME FORM --- */}
             </div>
         </>
     );

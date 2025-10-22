@@ -39,6 +39,7 @@ body {
   padding: 7px 14px;
   border-radius: 3px;
   transition: background 0.16s, color 0.16s;
+  text-decoration: none; /* Added for consistency */
 }
 .header nav a:hover, .header nav a.active {
   background: #2980b9;
@@ -137,6 +138,10 @@ body {
   font-size: 15px;
   transition: box-shadow 0.18s, background 0.18s;
   box-shadow: 0 1px 4px rgba(41, 128, 185, 0.08);
+  cursor: pointer; /* Added for consistency */
+  text-decoration: none; /* Added for consistency */
+  display: inline-block; /* Added for consistency */
+  text-align: center; /* Added for consistency */
 }
 .button:hover,
 .update-button:hover,
@@ -147,33 +152,33 @@ body {
   box-shadow: 0 4px 18px rgba(41, 128, 185, 0.14);
 }
 
+/* --- NEW: Outline button style --- */
+.button.outline {
+  background: #fff;
+  color: #2980b9;
+  border: 1px solid #2980b9;
+}
+.button.outline:hover {
+  background: #f4f9fc;
+  color: #206095;
+}
+
+/* --- NEW: Disabled button style --- */
+.button:disabled,
+.update-button:disabled,
+.login-button:disabled,
+.register-button:disabled,
+.apply-button:disabled {
+  background: #bdc3c7;
+  color: #7f8c8d;
+  cursor: not-allowed;
+  box-shadow: none;
+}
 
 
 .dashboard-section li:last-child {
   margin-bottom: 0;
 }
-
-/* Button/Link Styling */
-/* .button, .update-button, .login-button, .register-button, .apply-button {
-  display: inline-block;
-  background: linear-gradient(90deg, #3498db 60%, #2980b9 100%);
-  color: #fff;
-  padding: 12px 22px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s, box-shadow 0.2s;
-  text-align: center;
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
-} */
-
-/* .button:hover, .update-button:hover, .login-button:hover, .register-button:hover, .apply-button:hover {
-  background: linear-gradient(90deg, #2980b9 60%, #3498db 100%);
-  box-shadow: 0 4px 16px rgba(52, 152, 219, 0.12);
-} */
 
 .view-all {
   text-align: center;
@@ -190,6 +195,8 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
+  flex-wrap: wrap; /* Added for responsiveness */
+  gap: 10px; /* Added for spacing */
 }
 
 .list-item-details {
@@ -206,14 +213,14 @@ body {
 
 /* Login/Register Containers */
 .login-container, .register-container {
-  background-image: url("../images/leone-venter-VieM9BdZKFo-unsplash.jpg");
+  /* background-image: url("../images/leone-venter-VieM9BdZKFo-unsplash.jpg"); */
   max-width: 500px;
   margin: 60px auto;
   padding: 32px 28px;
   border: 1px solid #e0e0e0;
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(44,62,80,0.10);
-  background: #fefae0;
+  background: #fff; /* Changed from #fefae0 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -259,11 +266,18 @@ body {
   margin-bottom: 16px;
   background: #fafbfc;
   transition: border 0.18s;
+  box-sizing: border-box; /* Added for better sizing */
 }
 .input:focus {
   border-color: #2980b9;
   background: #fff;
   outline: none;
+}
+
+/* --- NEW: Textarea styling (reuse input) --- */
+textarea.input {
+  height: auto; /* Allow auto-resize */
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; /* Match font */
 }
 
 
@@ -282,6 +296,24 @@ body {
   text-decoration: underline;
 }
 
+/* --- NEW: Error and Success Message Styles --- */
+.login-error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 7px 0 5px 0;
+  text-align: center;
+  font-weight: 500;
+}
+.login-success {
+  color: #27ae60; /* Green color */
+  font-size: 14px;
+  margin: 7px 0 5px 0;
+  text-align: center;
+  font-weight: 500;
+}
+/* --- END NEW --- */
+
+
 /* Update Profile */
 .update-profile-container {
   margin: 18px;
@@ -289,6 +321,8 @@ body {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(44,62,80,0.06);
   padding: 24px;
+  max-width: 800px; /* Added max-width */
+  margin: 40px auto; /* Centered */
 }
 
 .update-profile-title {
@@ -305,10 +339,11 @@ body {
 
 .update-profile-fillup {
   margin-left: 18px;
-  font-size: 18px;
+  font-size: 16px; /* Reduced size */
   font-weight: bold;
   color: #555;
-  margin-bottom: 28px;
+  margin-bottom: 8px; /* Reduced margin */
+  display: block; /* Make it a block */
 }
 
 .update-button {
@@ -430,6 +465,9 @@ body {
   .header .logo {
     font-size: 20px;
   }
+  .header nav {
+    margin-top: 10px; /* Added margin */
+  }
   .header nav a {
     margin-left: 10px;
     font-size: 14px;
@@ -448,6 +486,7 @@ body {
   border-radius: 3px;
   cursor: pointer;
   transition: background 0.16s, color 0.16s, border-color 0.16s;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; /* Match font */
 }
 
 .header-logout-button:hover {
@@ -456,30 +495,65 @@ body {
   color: #fff;
 }
 
-/* Ensure default header nav a styles are applied if you keep <a> tag for logout */
-.header nav a {
-  color: #f3f3f3;
-  margin-left: 20px;
-  font-size: 15px;
-  font-weight: 500;
-  padding: 7px 14px;
-  border-radius: 3px;
-  transition: background 0.16s, color 0.16s;
-}
-.header nav a:hover, .header nav a.active {
-  background: #2980b9;
-  color: #fff;
-}
 
-
-/* .job-listing {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.list-item-action{
+/* --- NEW: Modal Styles --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: auto;
-} */
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 24px 28px;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: #2c3e50;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+/* --- END MODAL --- */
+/* --- NEW STYLES FOR SEARCH FORM --- */
+.search-form {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+}
+
+.search-form .input {
+  margin-bottom: 0; /* Override default margin */
+  flex-grow: 1; /* Allow inputs to grow */
+}
+
+.search-form .button {
+  flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+  }
+}
+/* --- END NEW STYLES --- */

@@ -1,7 +1,7 @@
 // src/components/CompanyRegister.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Import Link
 
 export default function CompanyRegister() {
   const navigate = useNavigate();
@@ -12,6 +12,9 @@ export default function CompanyRegister() {
     companyPassword: '',
     confirmPassword: ''
   });
+  
+  const [error, setError] = useState(''); // <-- NEW STATE
+  const [isSubmitting, setIsSubmitting] = useState(false); // <-- NEW STATE
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -19,16 +22,20 @@ export default function CompanyRegister() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
 
     const { companyName, companyEmail, companyPassword, confirmPassword } = formData;
 
     if (!companyName || !companyEmail || !companyPassword || !confirmPassword) {
-      alert("Please fill all fields.");
+      setError("Please fill all fields.");
+      setIsSubmitting(false);
       return;
     }
 
     if (companyPassword !== confirmPassword) {
-      alert("Passwords do not match.");
+      setError("Passwords do not match.");
+      setIsSubmitting(false);
       return;
     }
 
@@ -39,12 +46,20 @@ export default function CompanyRegister() {
         companyPassword
       });
 
-      alert("Company registered successfully!");
-      navigate("/login");
+      // alert("Company registered successfully!"); // <-- REPLACED
+      // Redirect to login with a success message
+      navigate("/login", { state: { successMessage: "Registration successful! Please log in." } });
+
 
     } catch (error) {
       console.error("Company Registration Failed:", error);
-      alert("Company registration failed.");
+      if (error.response && error.response.data && error.response.data.message) {
+        setError(error.response.data.message); // Show specific error from backend
+      } else {
+        setError("Company registration failed.");
+      }
+    } finally {
+        setIsSubmitting(false);
     }
   };
 
@@ -52,7 +67,9 @@ export default function CompanyRegister() {
     <div className="register-container">
       <h2 className="register-title">Register Your Company</h2>
       <form onSubmit={handleSubmit}>
-        <label className="register-label">Company Name</label>
+        {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '15px' }}>{error}</div>}
+
+        <label className="login-label">Company Name</label>
         <input
           onChange={handleChange}
           type="text"
@@ -62,7 +79,7 @@ export default function CompanyRegister() {
           required
         />
 
-        <label className="register-label">Email</label>
+        <label className="login-label">Email</label>
         <input
           onChange={handleChange}
           type="email"
@@ -72,28 +89,32 @@ export default function CompanyRegister() {
           required
         />
 
-        <label className="register-label">Password</label>
+        <label className="login-label">Password</label>
         <input
           onChange={handleChange}
           type="password"
           name="companyPassword"
-          placeholder="Password"
+          placeholder="Password (min. 6 characters)"
           className="input"
+          minLength="6"
           required
         />
 
-        <label className="register-label">Confirm Password</label>
+        <label className="login-label">Confirm Password</label>
         <input
           onChange={handleChange}
           type="password"
           name="confirmPassword"
           placeholder="Confirm Password"
           className="input"
+          minLength="6"
           required
         />
 
-        <button className="register-button">Register</button>
-        <p className="login-link">Already have an account? <a href="/login">Login</a></p>
+        <button className="register-button" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Registering...' : 'Register'}
+        </button>
+        <p className="login-link">Already have an account? <Link to="/login">Login</Link></p>
       </form>
     </div>
   );

@@ -1,21 +1,34 @@
-import Interview from '../models/interviewSchema.js'; // Import the Interview model
-import Job from '../models/jobSchema.js'; // To get job titles for interviews
-import Company from '../Models/Company.js'; // To get company names for interviews
+// src/server/Controllers/interviewController.js
 
-// --- NEW CODE: Function for a company to schedule an interview ---
+import Interview from '../models/interviewSchema.js'; // Import the Interview model
+// Removed unused Job and Company imports as data is now saved directly
+
+// --- UPDATED: Function for a company to schedule an interview ---
 const scheduleInterview = async (req, res) => {
     try {
-        // Validation for interview scheduling should be added in authValidation.js later
-        const { applicationId, companyId, studentId, date, time, type, link } = req.body;
+        // Validation is now handled by middleware
+        const { 
+            applicationId, 
+            companyId, 
+            studentId, 
+            date, 
+            time, 
+            type, 
+            link, 
+            jobTitle,     // <-- NEW
+            companyName   // <-- NEW
+        } = req.body;
 
         const newInterview = new Interview({
             applicationId,
             companyId,
             studentId,
+            jobTitle,     // <-- NEW
+            companyName,  // <-- NEW
             date,
             time,
             type,
-            link
+            link: type === 'Virtual' ? link : '' // Only save link if virtual
         });
 
         await newInterview.save();
@@ -26,59 +39,56 @@ const scheduleInterview = async (req, res) => {
     }
 };
 
-// --- NEW CODE: Function to get interviews for a specific student ---
+// --- UPDATED: Function to get interviews for a specific student ---
 const getStudentInterviews = async (req, res) => {
     try {
         const { studentId } = req.params; // Get studentId from URL parameters
 
         // Find all interviews for this student
-        const interviews = await Interview.find({ studentId: studentId });
+        // No complex lookups needed anymore, data is self-contained
+        const interviews = await Interview.find({ studentId: studentId }).sort({ date: 1 }); // Sort by date
 
-        // For each interview, fetch job title and company name for display
-        const interviewsWithDetails = await Promise.all(interviews.map(async (interview) => {
-            // Find the job through the application (assuming a direct link for simplicity or you might store jobId in interviewSchema)
-            // If interviewSchema has jobId directly, use that for direct lookup.
-            // For now, let's assume you fetch job details via looking up the application.
-            // Or a simpler approach, if you want to explicitly pass jobId during interview scheduling
-            // For now, assuming jobId is NOT in interviewSchema directly, so we need to get it from the application if needed.
-            // Let's modify the interview schema or just fetch job title and company from the provided IDs.
-
-            // Fetch job and company details based on IDs available in interviewSchema
-            const company = await Company.findById(interview.companyId);
-            // Assuming applicationId can lead us to the job if needed, but for simplicity, let's directly look up.
-            // If you need job title, you might need to add jobId to interviewSchema or fetch the application first.
-            // For current interviewSchema, we only have companyId.
-            // A more robust approach might be to save jobTitle and companyName during interview creation, or add jobId to interviewSchema.
-
-            let jobTitle = 'N/A';
-            // OPTIONAL: If you want to link interview to job title, you'd need to fetch the application and then its job
-            // const application = await Application.findById(interview.applicationId);
-            // if (application) {
-            //     const job = await Job.findById(application.jobId);
-            //     if (job) jobTitle = job.title;
-            // }
-
-            return {
-                _id: interview._id,
-                applicationId: interview.applicationId,
-                companyId: interview.companyId,
-                studentId: interview.studentId,
-                date: interview.date,
-                time: interview.time,
-                type: interview.type,
-                link: interview.link,
-                companyName: company ? company.companyName : 'Unknown Company',
-                jobTitle: jobTitle // This will be 'N/A' unless you enhance interview creation or fetch strategy
-            };
-        }));
-
-        res.status(200).json({ interviews: interviewsWithDetails });
+        res.status(200).json({ interviews: interviews });
     } catch (error) {
         console.error('Error fetching student interviews:', error);
         res.status(500).json({ message: 'Internal server error while fetching student interviews.' });
     }
 };
+// --- END UPDATED ---
+
+// --- NEW CODE: Function to get interviews for a specific company ---
+const getCompanyInterviews = async (req, res) => {
+    try {
+        const { companyId } = req.params; // Get companyId from URL parameters
+
+        // Find all interviews scheduled by this company
+        const interviews = await Interview.find({ companyId: companyId }).sort({ date: 1 }); // Sort by date
+
+        // Add student details (name) for company dashboard display
+        // This requires an additional lookup, but is valuable for the UI
+        const interviewsWithStudentDetails = await Promise.all(interviews.map(async (interview) => {
+            // You'll need to import the Student model for this
+            // import Student from '../models/Student.js'; (Add this at the top)
+            // const student = await Student.findById(interview.studentId).select('firstName lastName');
+            
+            return {
+                ...interview._doc, // Get all interview properties
+                // studentName: student ? `${student.firstName} ${student.lastName}` : 'Unknown Student'
+                // For now, let's skip the student name to avoid another import error
+                // You can add this optimization later
+            };
+        }));
+
+
+        res.status(200).json({ interviews: interviewsWithStudentDetails });
+    } catch (error) {
+        console.error('Error fetching company interviews:', error);
+        res.status(500).json({ message: 'Internal server error while fetching company interviews.' });
+    }
+};
 // --- END NEW CODE ---
 
 
-export { scheduleInterview, getStudentInterviews };
+// --- THIS IS THE FIX ---
+export { scheduleInterview, getStudentInterviews, getCompanyInterviews };
+// --- END THE FIX ---

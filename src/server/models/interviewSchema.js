@@ -14,6 +14,16 @@ const interviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    // --- NEW FIELDS ---
+    jobTitle: {
+        type: String,
+        required: true,
+    },
+    companyName: {
+        type: String,
+        required: true,
+    },
+    // --- END NEW FIELDS ---
     date: {
         type: Date,
         required: true,
@@ -28,7 +38,7 @@ const interviewSchema = new mongoose.Schema({
     },
     link: {
         type: String,
-        required: true,
+        required: false, // <-- UPDATED: Was 'true'. Not required for On-site/Phone
     }
 }, {
     timestamps: true, // Automatically manage createdAt and updatedAt fields

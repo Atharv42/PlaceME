@@ -8,14 +8,27 @@ import authRoutes from './Routes/authRoutes.js';
 import jobRoutes from './Routes/jobRoutes.js';
 import applicationRoutes from './Routes/applicationRoutes.js';
 import interviewRoutes from './Routes/interviewRoutes.js';
-import studentRoutes from './Routes/studentRoutes.js'; // Import new student routes
+import studentRoutes from './Routes/studentRoutes.js'; 
+import path from 'path'; 
+import { fileURLToPath } from 'url'; 
 
-dotenv.config();
+// --- THIS IS THE FIX ---
+// Define __dirname (the path to your /server folder)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load the .env file from the /server folder
+dotenv.config({ path: path.join(__dirname, '.env') }); 
+// --- END FIX ---
+
 const app = express();
 
 // Middleware
 app.use(express.json());
 app.use(cors());
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
 app.get('/', (req, res) => {
@@ -25,7 +38,7 @@ app.use('/api', authRoutes);
 app.use('/api', jobRoutes);
 app.use('/api', applicationRoutes);
 app.use('/api', interviewRoutes);
-app.use('/api', studentRoutes); // Use new student routes
+app.use('/api', studentRoutes); 
 
 // Start server
 app.listen(3000, () => {

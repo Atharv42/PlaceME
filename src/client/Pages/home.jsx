@@ -18,7 +18,8 @@ const Home = () => {
           </div>
         </div>
         <div className="hero-image">
-          <img src="/assets/placement-illustration.svg" alt="Illustration" />
+          {/* UPDATED: Path changed to root, assuming image is in /public/ */}
+          <img src="/placement-illustration.svg" alt="Illustration" />
         </div>
       </header>
 

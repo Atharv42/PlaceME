@@ -1,5 +1,7 @@
-import Student from '../Models/Student.js';
-import Company from '../Models/Company.js';
+// src/server/Controllers/authController.js
+
+import Student from '../models/Student.js';
+import Company from '../models/Company.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -42,6 +44,7 @@ const StudentSignUp = async (req, res) => {
 
         res.status(201).json({ message: "Student registered successfully" });
     } catch (error) {
+        console.error("Student Signup Error:", error); // Added better logging
         res.status(500).json({ message: "Internal server error" });
     }
 };
@@ -67,9 +70,14 @@ const CompanySignUp = async (req, res) => {
 
         res.status(201).json({ message: "Company registered successfully" });
     } catch (error) {
+        console.error("Company Signup Error:", error); // Added better logging
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+// src/server/Controllers/authController.js
+// ... (keep all your imports: Student, Company, bcrypt, jwt)
+// ... (keep your StudentSignUp and CompanySignUp functions)
 
 const Login = async (req, res) => {
     try {
@@ -100,7 +108,15 @@ const Login = async (req, res) => {
             role: userType
         };
 
-        const token = jwt.sign(tokenPayload, process.env.JWT_SECRET || 'REDACTED_ROTATE_JWT_SECRET', { expiresIn: '1h' });
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            // If you see this in your server console, the path in server.js is still wrong.
+            console.error("JWT_SECRET is not defined. Make sure it's in your .env file and .env is loaded.");
+            return res.status(500).json({ message: "Internal server configuration error." });
+        }
+        
+        const token = jwt.sign(tokenPayload, secret, { expiresIn: '1h' }); 
+        
         console.log(userType);
         res.status(200).json({
             message: "Login successful",
@@ -108,11 +124,14 @@ const Login = async (req, res) => {
             role: userType,
             userId: user._id
         });
-        alert("Login successful");
+        
+        // alert("Login successful"); // <-- This is correctly removed
 
     } catch (error) {
+        console.error("Login Error:", error); 
         res.status(500).json({ message: "Internal server error" });
     }
 };
 
+// Make sure you are exporting all three functions
 export { StudentSignUp, CompanySignUp, Login };

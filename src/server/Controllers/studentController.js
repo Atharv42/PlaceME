@@ -1,6 +1,6 @@
 // src/server/Controllers/studentController.js
 
-import Student from '../Models/Student.js'; // Import the Student model
+import Student from '../models/Student.js'; // Import the Student model
 
 // --- NEW CODE: Function to get a student's profile ---
 const getStudentProfile = async (req, res) => {
@@ -31,7 +31,8 @@ const updateStudentProfile = async (req, res) => {
             return res.status(404).json({ message: 'Student not found.' });
         }
         res.status(200).json({ message: 'Profile updated successfully!', student: updatedStudent });
-    } catch (error) {
+    } catch (error)
+    {
         console.error('Error updating student profile:', error);
         // Handle potential unique constraint errors (e.g., email, contact)
         if (error.code === 11000) { // MongoDB duplicate key error
@@ -42,4 +43,40 @@ const updateStudentProfile = async (req, res) => {
 };
 // --- END NEW CODE ---
 
-export { getStudentProfile, updateStudentProfile };
+// --- NEW FUNCTION: Handle Resume Upload ---
+const uploadResume = async (req, res) => {
+    try {
+        const { studentId } = req.params;
+        
+        if (!req.file) {
+            return res.status(400).json({ message: 'No file uploaded.' });
+        }
+
+        // Create the URL path for the file
+        const resumeUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+
+        // Find the student and update just the resumeUrl field
+        const updatedStudent = await Student.findByIdAndUpdate(
+            studentId,
+            { resumeUrl: resumeUrl },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!updatedStudent) {
+            return res.status(404).json({ message: 'Student not found.' });
+        }
+        
+        res.status(200).json({ 
+            message: 'Resume uploaded successfully!', 
+            student: updatedStudent,
+            resumeUrl: resumeUrl 
+        });
+
+    } catch (error) {
+        console.error('Error uploading resume:', error);
+        res.status(500).json({ message: 'Internal server error while uploading resume.' });
+    }
+};
+// --- END NEW FUNCTION ---
+
+export { getStudentProfile, updateStudentProfile, uploadResume }; // <-- ADDED uploadResume

@@ -1,13 +1,15 @@
 // src/client/Pages/CompanyDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 import '../index.css';
+import ScheduleInterviewModal from '../Components/ScheduleInterviewModal.jsx';
+import UpdateStatusModal from '../Components/UpdateStatusModal.jsx'; // <-- IMPORT NEW MODAL
 
 export default function CompanyDashboard() {
     const navigate = useNavigate();
-    const [companyName, setCompanyName] = useState('');
+    const [companyName, setCompanyName] = useState(''); 
     const [jobs, setJobs] = useState([]);
     const [newJob, setNewJob] = useState({
         title: '',
@@ -17,53 +19,64 @@ export default function CompanyDashboard() {
         deadline: '',
     });
     const [applications, setApplications] = useState([]);
+    const [interviews, setInterviews] = useState([]); 
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState(''); 
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchCompanyData = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                const role = localStorage.getItem('role');
-                const companyId = localStorage.getItem('userId');
+    // State for Interview modal
+    const [showInterviewModal, setShowInterviewModal] = useState(false);
+    const [selectedApplication, setSelectedApplication] = useState(null);
 
-                // --- DEBUGGING LOGS ---
-                console.log('CompanyDashboard useEffect - Initial Check:');
-                console.log('Token:', token ? 'Exists' : 'Does NOT exist');
-                console.log('Role:', role);
-                console.log('Company ID:', companyId);
-                // --- END DEBUGGING LOGS ---
+    // --- NEW STATE FOR STATUS MODAL ---
+    const [showStatusModal, setShowStatusModal] = useState(false);
+    const [selectedAppForStatus, setSelectedAppForStatus] = useState(null);
+    // --- END NEW STATE ---
 
-                if (!token || role !== 'company') {
-                    console.log('Redirecting to login: Token missing or Role is not "company"');
-                    navigate('/login'); // Redirect if not logged in as a company
-                    return;
-                }
+    // Function to fetch all company data
+    const fetchCompanyData = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            const companyId = localStorage.getItem('userId');
 
-                setCompanyName('Your Company Name'); // Placeholder for company name for now
-
-                // Fetch jobs posted by this company
-                const jobsRes = await axios.get(`http://localhost:3000/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
-                setJobs(jobsRes.data.jobs);
-
-                // Fetch applications for this company
-                const appsRes = await axios.get(`http://localhost:3000/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
-                setApplications(appsRes.data.applications); // FIXED: Changed appsRes.data.app to appsRes.data.applications
-
-            } catch (err) {
-                setError('Failed to fetch company data. Please try again.');
-                console.error('Company dashboard fetch error:', err);
-                if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-                    console.log('Redirecting to login due to API error (401/403)');
-                    navigate('/login');
-                }
-            } finally {
-                setLoading(false);
+            if (!token || role !== 'company') {
+                navigate('/login');
+                return;
             }
-        };
+            
+            if (!loading) {
+                 setError('');
+                 setSuccessMessage('');
+            }
 
+            const email = localStorage.getItem('email'); 
+            setCompanyName(email || 'My Company'); 
+
+            const jobsRes = await axios.get(`http://localhost:3000/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            setJobs(jobsRes.data.jobs);
+
+            const appsRes = await axios.get(`http://localhost:3000/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            setApplications(appsRes.data.applications);
+
+            const interviewsRes = await axios.get(`http://localhost:3000/api/company/interviews/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            setInterviews(interviewsRes.data.interviews);
+
+        } catch (err) {
+            setError('Failed to fetch company data. Please try again.');
+            console.error('Company dashboard fetch error:', err);
+            if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+                navigate('/login');
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        setLoading(true);
         fetchCompanyData();
-    }, [navigate]); // Added navigate to dependency array
+    }, [navigate]);
 
     const handleNewJobChange = (e) => {
         setNewJob({ ...newJob, [e.target.name]: e.target.value });
@@ -72,6 +85,7 @@ export default function CompanyDashboard() {
     const handlePostJob = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccessMessage('');
         try {
             const token = localStorage.getItem('token');
             const companyId = localStorage.getItem('userId');
@@ -84,17 +98,15 @@ export default function CompanyDashboard() {
                 skillsRequired: newJob.skillsRequired.split(',').map(skill => skill.trim()),
                 deadline: new Date(newJob.deadline).toISOString(),
                 postedDate: new Date().toISOString(),
-                company: companyName
+                company: companyName 
             };
 
             const res = await axios.post('http://localhost:3000/api/jobs', jobData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log('Job posted successfully:', res.data);
-            alert('Job posted successfully!');
-
-            const updatedJobsRes = await axios.get(`http://localhost:3000/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
-            setJobs(updatedJobsRes.data.jobs);
+            
+            setSuccessMessage('Job posted successfully!'); 
+            await fetchCompanyData(); 
 
             setNewJob({ title: '', description: '', location: '', skillsRequired: '', deadline: '' });
         } catch (err) {
@@ -103,50 +115,65 @@ export default function CompanyDashboard() {
         }
     };
 
-    const handleUpdateApplicationStatus = async (applicationId, currentStatus, studentId) => {
-        const newStatus = prompt(`Change status for application ${applicationId} (Current: ${currentStatus}). Enter new status (e.g., Shortlisted, Rejected, Interview Scheduled):`);
-        if (newStatus && newStatus.trim() !== currentStatus) {
-            try {
-                const token = localStorage.getItem('token');
-                const res = await axios.put(`http://localhost:3000/api/applications/${applicationId}/status`,
-                    { status: newStatus.trim() },
-                    { headers: { Authorization: `Bearer ${token}` } }
-                );
-                alert(`Application status updated to: ${newStatus.trim()}`);
-                setApplications(applications.map(app =>
-                    app._id === applicationId ? { ...app, status: newStatus.trim() } : app // Used _id here for consistency
-                ));
+    // --- UPDATED: This now just OPENS the status modal ---
+    const handleUpdateApplicationStatus = (app) => {
+        setSelectedAppForStatus(app);
+        setShowStatusModal(true);
+    };
 
-                if (newStatus.trim().toLowerCase() === 'interview scheduled') {
-                    const interviewDate = prompt('Enter interview date (YYYY-MM-DD):');
-                    const interviewTime = prompt('Enter interview time (HH:MM):');
-                    const interviewType = prompt('Enter interview type (e.g., Virtual, On-site):');
-                    const interviewLink = prompt('Enter interview link (if virtual):');
-
-                    if (interviewDate && interviewTime && interviewType && interviewLink) {
-                        const interviewData = {
-                            applicationId: applicationId,
-                            companyId: localStorage.getItem('userId'),
-                            studentId: studentId,
-                            date: new Date(`${interviewDate}T${interviewTime}:00`).toISOString(),
-                            time: interviewTime,
-                            type: interviewType,
-                            link: interviewLink,
-                        };
-                        await axios.post('http://localhost:3000/api/interviews', interviewData, {
-                            headers: { Authorization: `Bearer ${token}` }
-                        });
-                        alert('Interview scheduled successfully!');
-                    } else {
-                        alert('Interview details incomplete, interview not scheduled.');
-                    }
-                }
-
-            } catch (err) {
-                setError('Failed to update application status.');
-                console.error('Update status error:', err);
-            }
+    // --- NEW: This function handles the API call ---
+    const handleSaveStatus = async (newStatus) => {
+        if (!selectedAppForStatus || newStatus === selectedAppForStatus.status) {
+            setShowStatusModal(false);
+            return;
         }
+
+        const { _id: applicationId, studentId, jobTitle, studentName } = selectedAppForStatus;
+
+        try {
+            const token = localStorage.getItem('token');
+            const res = await axios.put(
+                `http://localhost:3000/api/applications/${applicationId}/status`,
+                { status: newStatus },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            
+            setSuccessMessage(res.data.message); 
+            
+            // Update the state locally
+            setApplications(applications.map(app => 
+                app._id === applicationId ? { ...app, status: newStatus } : app
+            ));
+
+            // If "Interview Scheduled", open the next modal
+            if (newStatus.toLowerCase() === 'interview scheduled') {
+                setSelectedApplication({ 
+                    applicationId, 
+                    studentId, 
+                    jobTitle, 
+                    studentName, 
+                    companyId: localStorage.getItem('userId') 
+                });
+                setShowInterviewModal(true); // Open interview modal
+            }
+
+        } catch (err) {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError('Failed to update application status.');
+            }
+            console.error('Update status error:', err);
+        } finally {
+            setShowStatusModal(false);
+            setSelectedAppForStatus(null);
+        }
+    };
+    // --- END NEW FUNCTION ---
+
+    const handleInterviewScheduled = (newInterview) => {
+        setInterviews([...interviews, newInterview]);
+        fetchCompanyData();
     };
 
     if (loading) {
@@ -166,7 +193,9 @@ export default function CompanyDashboard() {
             <div className="dashboard-container">
                 <h1 className="browse-jobs-title">Welcome, {companyName}!</h1>
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '20px' }}>{error}</div>}
+                {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '20px' }}>{successMessage}</div>}
 
+                {/* ... Post a New Job section (unchanged) ... */}
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Post a New Job Opening</h2>
                     <form onSubmit={handlePostJob}>
@@ -179,11 +208,12 @@ export default function CompanyDashboard() {
                         <label className="login-label">Skills Required (comma-separated)</label>
                         <input type="text" name="skillsRequired" value={newJob.skillsRequired} onChange={handleNewJobChange} className="input" placeholder="e.g., Python, Java, Data Structures, Algorithms" required />
                         <label className="login-label">Application Deadline</label>
-                        <input type="date" name="deadline" value={newJob.deadline} onChange={handleNewJobChange} className="input" required />
+                        <input type="date" name="deadline" value={newJob.deadline} onChange={handleNewJobChange} className="input" min={new Date().toISOString().split('T')[0]} required />
                         <button type="submit" className="button" style={{ width: '100%', marginTop: '20px' }}>Post Job</button>
                     </form>
                 </div>
 
+                {/* ... My Job Postings section (unchanged) ... */}
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>My Job Postings</h2>
                     {jobs.length === 0 ? (
@@ -202,8 +232,19 @@ export default function CompanyDashboard() {
                                         <p><strong>Applicants:</strong> {applications.filter(app => app.jobId === job._id).length}</p>
                                     </div>
                                     <div className="list-item-action">
-                                        <button className="button" style={{ marginRight: '10px' }}>View Applicants</button>
-                                        <button className="button">Edit Job</button>
+                                        <Link 
+                                            to={`/jobs/${job._id}/applicants`} 
+                                            className="button" 
+                                            style={{ marginRight: '10px' }}
+                                        >
+                                            View Applicants
+                                        </Link>
+                                        <Link 
+                                            to={`/jobs/${job._id}/edit`} 
+                                            className="button outline"
+                                        >
+                                            Edit Job
+                                        </Link>
                                     </div>
                                 </li>
                             ))}
@@ -211,6 +252,7 @@ export default function CompanyDashboard() {
                     )}
                 </div>
 
+                {/* --- Candidate Applications section (UPDATED) --- */}
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Candidate Applications</h2>
                     {applications.length === 0 ? (
@@ -218,7 +260,7 @@ export default function CompanyDashboard() {
                     ) : (
                         <ul>
                             {applications.map((app) => (
-                                <li key={app._id} className="job-listing-candidate" style={{ margin: '10px 0' }}> {/* Used _id here for consistency */}
+                                <li key={app._id} className="job-listing-candidate" style={{ margin: '10px 0' }}>
                                     <div>
                                         <p><strong>Job:</strong> {app.jobTitle}</p>
                                         <p><strong>Applicant:</strong> {app.studentName}</p>
@@ -228,13 +270,22 @@ export default function CompanyDashboard() {
                                         <p><strong>Status:</strong> <span style={{ fontWeight: 'bold', color: '#2980b9' }}>{app.status}</span></p>
                                     </div>
                                     <div className="list-item-action">
-                                        <button className="button" style={{ marginRight: '10px' }} onClick={() => window.open(app.studentResumeUrl, '_blank')}>View Resume</button>
+                                        <button 
+                                            className="button" 
+                                            style={{ marginRight: '10px' }} 
+                                            onClick={() => app.studentResumeUrl ? window.open(app.studentResumeUrl, '_blank') : alert('No resume URL provided by student.')}
+                                            disabled={!app.studentResumeUrl}
+                                        >
+                                            View Resume
+                                        </button>
+                                        {/* --- UPDATED onClick --- */}
                                         <button
                                             className="button"
-                                            onClick={() => handleUpdateApplicationStatus(app._id, app.status, app.studentId)} 
+                                            onClick={() => handleUpdateApplicationStatus(app)} 
                                         >
                                             Update Status
                                         </button>
+                                        {/* --- END UPDATED onClick --- */}
                                     </div>
                                 </li>
                             ))}
@@ -242,11 +293,57 @@ export default function CompanyDashboard() {
                     )}
                 </div>
 
+                {/* ... Upcoming Interviews section (unchanged) ... */}
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Upcoming Interviews</h2>
-                    <p>No interviews scheduled yet. (Backend API for fetching interviews needed)</p>
+                    {interviews.length === 0 ? (
+                        <p>No interviews scheduled yet.</p>
+                    ) : (
+                        <ul>
+                            {interviews.map((interview) => (
+                                <li key={interview._id}>
+                                    <div className="list-item-details">
+                                        <strong>{interview.jobTitle}</strong>
+                                        <p>Date: {new Date(interview.date).toLocaleDateString()} | Time: {interview.time}</p>
+                                        <p>Type: {interview.type}</p>
+                                    </div>
+                                    <div className="list-item-action">
+                                        {interview.link && interview.type.toLowerCase() === 'virtual' ? (
+                                            <a href={interview.link} target="_blank" rel="noopener noreferrer" className="button">Join Meeting</a>
+                                        ) : (
+                                            <button className="button" disabled>Meeting Details</button>
+                                        )}
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
+
+            {/* --- ADD MODALS TO JSX --- */}
+            {/* Interview Modal */}
+            {showInterviewModal && selectedApplication && (
+                <ScheduleInterviewModal
+                    applicationId={selectedApplication.applicationId}
+                    studentId={selectedApplication.studentId}
+                    jobTitle={selectedApplication.jobTitle}
+                    studentName={selectedApplication.studentName}
+                    companyId={selectedApplication.companyId}
+                    companyName={companyName}
+                    onClose={() => setShowInterviewModal(false)}
+                    onInterviewScheduled={handleInterviewScheduled}
+                />
+            )}
+            {/* Status Update Modal */}
+            {showStatusModal && selectedAppForStatus && (
+                <UpdateStatusModal
+                    application={selectedAppForStatus}
+                    onClose={() => setShowStatusModal(false)}
+                    onSave={handleSaveStatus}
+                />
+            )}
+            {/* --- END ADD MODALS --- */}
         </>
     );
 }

@@ -13,7 +13,7 @@ const StudentSignup = (req, res, next) => {
         education: joi.string().min(2).max(100).required(),
         skills: joi.string().min(2).max(100).required(),
         experience: joi.string().min(1).max(100).required(),
-        resumeUrl: joi.string().uri().required()
+        resumeUrl: joi.string().uri().optional() 
     });
 
     const { error } = Schema.validate(req.body);
@@ -82,20 +82,18 @@ const ApplyJobValidation = (req, res, next) => {
     next();
 };
 
-// --- NEW CODE FOR STUDENT PROFILE UPDATE VALIDATION ---
-const StudentProfileUpdateValidation = (req, res, next) => {
+const InterviewSchedulingValidation = (req, res, next) => {
     const Schema = joi.object({
-        firstName: joi.string().min(2).max(30).optional(), // Optional for update
-        lastName: joi.string().min(2).max(30).optional(),
-        email: joi.string().email().optional(), // Email might be unique, so careful with updates
-        contact: joi.string().length(10).optional(),
-        address: joi.string().min(2).max(100).optional(),
-        education: joi.string().min(2).max(100).optional(),
-        skills: joi.string().min(2).max(100).optional(),
-        experience: joi.string().min(1).max(100).optional(),
-        resumeUrl: joi.string().uri().optional()
-        // password update would be a separate, more secure process
-    }).min(1); // At least one field must be present for update
+        applicationId: joi.string().required(),
+        companyId: joi.string().required(),
+        studentId: joi.string().required(),
+        jobTitle: joi.string().required(), 
+        companyName: joi.string().required(), 
+        date: joi.date().iso().greater('now').required(),
+        time: joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required(), 
+        type: joi.string().valid('Virtual', 'On-site', 'Phone').required(),
+        link: joi.string().uri().when('type', { is: 'Virtual', then: joi.required(), otherwise: joi.optional().allow('') })
+    });
 
     const { error } = Schema.validate(req.body);
     if (error) {
@@ -103,6 +101,48 @@ const StudentProfileUpdateValidation = (req, res, next) => {
     }
     next();
 };
-// --- END NEW CODE ---
 
-export { StudentSignup, CompanySignup, LoginValidation, JobPostingValidation, ApplyJobValidation, StudentProfileUpdateValidation }; // Export new validation
+const StudentProfileUpdateValidation = (req, res, next) => {
+    const Schema = joi.object({
+        firstName: joi.string().min(2).max(30).optional(), 
+        lastName: joi.string().min(2).max(30).optional(),
+        email: joi.string().email().optional(), 
+        contact: joi.string().length(10).optional(),
+        address: joi.string().min(2).max(100).optional(),
+        education: joi.string().min(2).max(100).optional(),
+        skills: joi.string().min(2).max(100).optional(),
+        experience: joi.string().min(1).max(100).optional(),
+        resumeUrl: joi.string().uri().optional().allow('')
+    }).min(1); 
+
+    const { error } = Schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+    next();
+};
+
+// --- NEW VALIDATION ---
+const UpdateStatusValidation = (req, res, next) => {
+    const Schema = joi.object({
+        status: joi.string().min(3).max(50).required()
+    });
+
+    const { error } = Schema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+    next();
+};
+// --- END NEW VALIDATION ---
+
+export { 
+    StudentSignup, 
+    CompanySignup, 
+    LoginValidation, 
+    JobPostingValidation, 
+    ApplyJobValidation, 
+    StudentProfileUpdateValidation,
+    InterviewSchedulingValidation,
+    UpdateStatusValidation // <-- EXPORT NEW
+};

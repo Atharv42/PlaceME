@@ -42,7 +42,7 @@ const registerSchema = new mongoose.Schema({
     }, 
     resumeUrl: {
         type: String,
-        required: true,
+        required: false, // <-- UPDATED: Was 'true'
     }
 }, {
     timestamps: true, // Automatically manage createdAt and updatedAt fields
