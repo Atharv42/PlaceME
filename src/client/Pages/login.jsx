@@ -1,30 +1,30 @@
 // src/client/Pages/login.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation, Link } from "react-router-dom"; // Import Link
+// --- THIS IS THE FIX (Ensure Link is imported) ---
+import { useNavigate, useLocation, Link } from "react-router-dom"; 
+// --- END FIX ---
 import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState(""); // <-- NEW STATE
+  const [successMessage, setSuccessMessage] = useState(""); 
   const navigate = useNavigate();
-  const location = useLocation(); // <-- NEW: To get state from redirect
+  const location = useLocation(); 
 
   useEffect(() => {
-    // Check if we were redirected from registration
     if (location.state && location.state.successMessage) {
       setSuccessMessage(location.state.successMessage);
-      // Clear the state so it doesn't show on refresh
       window.history.replaceState({}, document.title)
     }
   }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
-    setSuccessMessage(""); // Clear success message
+    setError(""); 
+    setSuccessMessage(""); 
 
     if (!email || !password) {
       setError("Both fields are required.");
@@ -37,20 +37,21 @@ function Login() {
         password,
       });
 
-      const { token, role, userId } = res.data;
+      const { token, role, userId, email: userEmail } = res.data; 
 
-      // Save token and user info to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("role", role);
       localStorage.setItem("userId", userId);
+      localStorage.setItem("email", userEmail); 
 
-      // Redirect to appropriate dashboard based on role
       if (role === 'student') {
-        navigate("/dashboard"); // Redirect students to student dashboard
+        navigate("/dashboard");
       } else if (role === 'company') {
-        navigate("/company-dashboard"); // Redirect companies to company dashboard
+        navigate("/company-dashboard");
+      } else if (role === 'admin') {
+        navigate("/admin-dashboard"); 
       } else {
-        navigate("/"); // Default redirect if role is unknown
+        navigate("/"); 
       }
 
     } catch (err) {
@@ -70,7 +71,6 @@ function Login() {
         </div>
         <h2 className="login-title">Welcome Back!</h2>
         
-        {/* --- NEW: Show success/error messages --- */}
         {successMessage && <div className="login-success" style={{marginBottom: '15px'}}>{successMessage}</div>}
         {error && <div className="login-error" style={{marginBottom: '15px'}}>{error}</div>}
 
@@ -95,12 +95,13 @@ function Login() {
             autoComplete="current-password"
             required
           />
-          {/* Error message is now shown above the form */}
           <button className="login-button" type="submit">Sign In</button>
         </form>
         <div className="login-links">
           <Link to="/register" className="login-link">Don’t have an account? Register</Link>
-          <Link to="/forgot" className="login-link">Forgot Password?</Link>
+          {/* --- THIS IS THE FIX (Changed a to Link and href to to='/forgot-password') --- */}
+          <Link to="/forgot-password" className="login-link">Forgot Password?</Link>
+          {/* --- END FIX --- */}
         </div>
       </div>
     </div>

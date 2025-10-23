@@ -15,8 +15,29 @@ const companySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    // --- NEW PROFILE FIELDS ---
+    website: {
+        type: String,
+        trim: true, // Remove leading/trailing whitespace
+        default: '', // Default to empty string
+    },
+    description: {
+        type: String,
+        trim: true,
+        default: '',
+    },
+    logoUrl: { // We'll handle logo *uploads* later, start with URL
+        type: String,
+        trim: true,
+        default: '',
+    },
+    // --- END NEW FIELDS ---
 }, {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true,
 });
 
 // Check if the model already exists before compiling

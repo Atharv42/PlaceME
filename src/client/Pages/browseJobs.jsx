@@ -1,7 +1,7 @@
 // src/client/Pages/browseJobs.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Header from '../header.jsx'; 
 import '../index.css'; 
 
@@ -169,7 +169,11 @@ export default function BrowseJobs() {
                     jobs.map((job) => (
                         <div className="job-listing" key={job._id}>
                             <h2 className="job-title">{job.title}</h2>
-                            <h4 className="company-name">{job.company}</h4>
+                            <h4 className="company-name">
+                                <Link to={`/company-profile/${job.companyId}`} title={`View profile for ${job.company}`}>
+                                    {job.company}
+                                </Link>
+                            </h4>
                             <p className="location">Location: {job.location}</p>
                             <p>{job.description}</p>
                             <p className="location">Skills: {job.skillsRequired.join(', ')}</p>

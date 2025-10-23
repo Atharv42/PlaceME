@@ -8,18 +8,18 @@ import authRoutes from './Routes/authRoutes.js';
 import jobRoutes from './Routes/jobRoutes.js';
 import applicationRoutes from './Routes/applicationRoutes.js';
 import interviewRoutes from './Routes/interviewRoutes.js';
-import studentRoutes from './Routes/studentRoutes.js'; 
-import path from 'path'; 
-import { fileURLToPath } from 'url'; 
+import studentRoutes from './Routes/studentRoutes.js';
+import adminRoutes from './Routes/adminRoutes.js';
+import companyRoutes from './Routes/companyRoutes.js'; // <-- IMPORT NEW
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// --- THIS IS THE FIX ---
-// Define __dirname (the path to your /server folder)
+// --- Define __dirname ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load the .env file from the /server folder
-dotenv.config({ path: path.join(__dirname, '.env') }); 
-// --- END FIX ---
+// --- Load .env file ---
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
@@ -27,7 +27,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Serve static files from the 'uploads' directory
+// Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Routes
@@ -38,7 +38,9 @@ app.use('/api', authRoutes);
 app.use('/api', jobRoutes);
 app.use('/api', applicationRoutes);
 app.use('/api', interviewRoutes);
-app.use('/api', studentRoutes); 
+app.use('/api', studentRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api', companyRoutes); // <-- USE NEW COMPANY ROUTES
 
 // Start server
 app.listen(3000, () => {

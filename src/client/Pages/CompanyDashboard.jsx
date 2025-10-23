@@ -192,6 +192,11 @@ export default function CompanyDashboard() {
             <Header />
             <div className="dashboard-container">
                 <h1 className="browse-jobs-title">Welcome, {companyName}!</h1>
+                <div style={{width: '100%', textAlign: 'center', marginBottom: '20px'}}>
+                     <Link to="/edit-company-profile" className="button outline">
+                        Edit Company Profile
+                    </Link>
+                </div>
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '20px' }}>{error}</div>}
                 {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '20px' }}>{successMessage}</div>}
 

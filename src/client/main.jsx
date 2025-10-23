@@ -7,8 +7,8 @@ import Dashboard from './Pages/dashboard.jsx';
 import './index.css';
 import Login from './Pages/login.jsx';
 import Register from './Pages/register.jsx';
-import UserRegister from './Pages/StudentRegister.jsx';
-import CompanyRegister from './Pages/CompanyRegister.jsx';
+import UserRegister from './Pages/studentRegister.jsx';
+import CompanyRegister from './Pages/companyRegister.jsx';
 import UpdateProfile from './Pages/updateProfile.jsx';
 import BrowseJobs from './Pages/browseJobs.jsx';
 import ViewResume from './Pages/viewResume.jsx';
@@ -16,9 +16,17 @@ import Home from './Pages/home.jsx';
 import CompanyDashboard from './Pages/CompanyDashboard.jsx'; 
 import ViewApplicants from './Pages/ViewApplicants.jsx'; 
 import EditJob from './Pages/EditJob.jsx'; 
-import ViewAllApplications from './Pages/ViewAllApplications.jsx'; // <-- IMPORT NEW PAGE
+import ViewAllApplications from './Pages/ViewAllApplications.jsx'; 
+import AdminRegister from './Pages/AdminRegister.jsx'; 
+import AdminDashboard from './Pages/AdminDashboard.jsx'; 
+import ForgotPassword from './Pages/ForgotPassword.jsx'; 
+import ResetPassword from './Pages/ResetPassword.jsx';   
+import EditCompanyProfile from './Pages/EditCompanyProfile.jsx'; // <-- IMPORT NEW
+import ViewCompanyProfile from './Pages/ViewCompanyProfile.jsx'; // <-- IMPORT NEW
+
 
 const PrivateRoute = ({ children, allowedRoles }) => {
+  // ... (existing PrivateRoute code... no changes)
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
@@ -37,68 +45,72 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/company" element={<CompanyRegister />} />
         <Route path="/student" element={<UserRegister />} />
+        <Route path="/admin-register" element={<AdminRegister />} /> 
+        <Route path="/forgot-password" element={<ForgotPassword />} /> 
+        <Route path="/reset-password/:token" element={<ResetPassword />} /> 
         <Route path="*" element={<Home />} /> 
 
-        {/* Protected Routes */}
+        {/* Admin Protected Route */}
         <Route
-          path="/dashboard"
-          element={
-            <PrivateRoute allowedRoles={['student']}> 
-              <Dashboard />
-            </PrivateRoute>
-          }
+          path="/admin-dashboard"
+          element={ <PrivateRoute allowedRoles={['admin']}> <AdminDashboard /> </PrivateRoute> }
         />
+
+        {/* Company Protected Routes */}
         <Route
           path="/company-dashboard"
-          element={
-            <PrivateRoute allowedRoles={['company']}> 
-              <CompanyDashboard />
-            </PrivateRoute>
-          }
+          element={ <PrivateRoute allowedRoles={['company']}> <CompanyDashboard /> </PrivateRoute> }
         />
         <Route
           path="/jobs/:jobId/applicants"
-          element={
-            <PrivateRoute allowedRoles={['company']}> 
-              <ViewApplicants />
-            </PrivateRoute>
-          }
+          element={ <PrivateRoute allowedRoles={['company']}> <ViewApplicants /> </PrivateRoute> }
         />
         <Route
           path="/jobs/:jobId/edit"
-          element={
-            <PrivateRoute allowedRoles={['company']}> 
-              <EditJob />
-            </PrivateRoute>
-          }
+          element={ <PrivateRoute allowedRoles={['company']}> <EditJob /> </PrivateRoute> }
         />
-        <Route path="/dashboard/updateprofile" element={
-          <PrivateRoute allowedRoles={['student']}> 
-            <UpdateProfile />
-          </PrivateRoute>
-        } />
-        <Route path="/dashboard/newJobs" element={
-          <PrivateRoute allowedRoles={['student']}> 
-            <BrowseJobs />
-          </PrivateRoute>
-        } />
-        <Route path="/dashboard/resume" element={
-          <PrivateRoute allowedRoles={['student']}> 
-            <ViewResume />
-          </PrivateRoute>
-        } />
-        {/* --- NEW ROUTE --- */}
-        <Route path="/dashboard/applications" element={
-          <PrivateRoute allowedRoles={['student']}> 
-            <ViewAllApplications />
-          </PrivateRoute>
-        } />
-        {/* --- END NEW ROUTE --- */}
+        {/* --- NEW COMPANY ROUTES --- */}
+        <Route
+          path="/edit-company-profile"
+          element={ <PrivateRoute allowedRoles={['company']}> <EditCompanyProfile /> </PrivateRoute> }
+        />
+        {/* --- END NEW COMPANY ROUTES --- */}
+
+
+        {/* Student Protected Routes (and view company profile) */}
+        <Route
+          path="/dashboard"
+          element={ <PrivateRoute allowedRoles={['student']}> <Dashboard /> </PrivateRoute> }
+        />
+        <Route 
+          path="/dashboard/updateprofile" 
+          element={ <PrivateRoute allowedRoles={['student']}> <UpdateProfile /> </PrivateRoute> } 
+        />
+        <Route 
+          path="/dashboard/newJobs" 
+          element={ <PrivateRoute allowedRoles={['student']}> <BrowseJobs /> </PrivateRoute> } 
+        />
+        <Route 
+          path="/dashboard/resume" 
+          element={ <PrivateRoute allowedRoles={['student']}> <ViewResume /> </PrivateRoute> } 
+        />
+        <Route 
+          path="/dashboard/applications" 
+          element={ <PrivateRoute allowedRoles={['student']}> <ViewAllApplications /> </PrivateRoute> } 
+        />
+        
+        {/* --- NEW ROUTE (Accessible by logged-in users, e.g., students) --- */}
+        <Route 
+          path="/company-profile/:companyId" 
+          element={ <PrivateRoute allowedRoles={['student', 'company', 'admin']}> <ViewCompanyProfile /> </PrivateRoute> } 
+        />
+         {/* --- END NEW ROUTE --- */}
       </Routes>
     </Router>
   </StrictMode>
