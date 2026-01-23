@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![PlaceME Banner](./images/banner.png)
+![PlaceME Banner](./images/image.png)
 
 **A comprehensive full-stack placement management system designed to streamline campus recruitment processes**
 
