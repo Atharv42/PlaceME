@@ -1,7 +1,6 @@
-// src/client/Components/ScheduleInterviewModal.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../client/index.css'; // Import general styles
+import '../../client/index.css'; 
 
 export default function ScheduleInterviewModal({
     applicationId,
@@ -9,32 +8,32 @@ export default function ScheduleInterviewModal({
     jobTitle,
     studentName,
     companyId,
-    companyName, // <-- NEW PROP
-    onClose, // Function to close the modal
-    onInterviewScheduled // Callback after successful scheduling
+    companyName, 
+    onClose, 
+    onInterviewScheduled 
 }) {
     const [interviewData, setInterviewData] = useState({
         date: '',
         time: '',
-        type: 'Virtual', // Default type
+        type: 'Virtual', 
         link: '',
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        // Get today's date in YYYY-MM-DD format for min attribute
+       
         const today = new Date().toISOString().split('T')[0];
 
-        // Clear form data and error when modal opens/changes application
+        
         setInterviewData({
-            date: today, // Default to today
-            time: '10:00', // Default to a reasonable time
+            date: today, 
+            time: '10:00', 
             type: 'Virtual',
             link: '',
         });
         setError('');
-    }, [applicationId, studentId]); // Reset when applicationId or studentId changes
+    }, [applicationId, studentId]); 
 
     const handleChange = (e) => {
         setInterviewData({ ...interviewData, [e.target.name]: e.target.value });
@@ -53,47 +52,44 @@ export default function ScheduleInterviewModal({
                 return;
             }
 
-            // --- UPDATED PAYLOAD ---
+           
             const payload = {
                 applicationId,
                 companyId,
                 studentId,
-                jobTitle,    // <-- ADDED
-                companyName, // <-- ADDED
+                jobTitle,    
+                companyName,
                 date: interviewData.date,
                 time: interviewData.time,
                 type: interviewData.type,
                 link: interviewData.link,
             };
-            // --- END UPDATED PAYLOAD ---
-
-            // --- DEBUGGING LOGS ---
-            console.log('Sending interview payload:', payload); // Log the data being sent
-            // --- END DEBUGGING LOGS ---
+            
+            console.log('Sending interview payload:', payload);
 
             const res = await axios.post('http://localhost:3000/api/interviews', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            // --- DEBUGGING LOGS ---
-            console.log('Interview scheduled successfully! Response:', res.data); // Log success response
-            // --- END DEBUGGING LOGS ---
+           
+            console.log('Interview scheduled successfully! Response:', res.data); 
+           
 
-            alert('Interview scheduled successfully!'); // Alert is ok inside a modal flow
-            onInterviewScheduled(res.data.interview); // Pass new interview data to parent
-            onClose(); // Close modal
+            alert('Interview scheduled successfully!'); 
+            onInterviewScheduled(res.data.interview); 
+            onClose(); 
         } catch (err) {
-            // --- DEBUGGING LOGS ---
+            
             console.error('Error scheduling interview:', err); // Log the full error object
             if (err.response) {
                 console.error('Error response data:', err.response.data);
                 console.error('Error response status:', err.response.status);
             }
-            // --- END DEBUGGING LOGS ---
+            
 
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
-                // Don't alert error, show it in the modal
+                
             } else {
                 setError('Failed to schedule interview. Please try again.');
             }
@@ -102,7 +98,7 @@ export default function ScheduleInterviewModal({
         }
     };
 
-    // Get today's date in YYYY-MM-DD format for min attribute
+    
     const today = new Date().toISOString().split('T')[0];
 
     return (
@@ -118,7 +114,7 @@ export default function ScheduleInterviewModal({
                         value={interviewData.date}
                         onChange={handleChange}
                         className="input"
-                        min={today} // Prevent scheduling in the past
+                        min={today} 
                         required
                     />
                     <label className="login-label">Time:</label>

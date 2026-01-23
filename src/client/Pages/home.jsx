@@ -1,4 +1,3 @@
-// src/components/Home.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './Home.css';
@@ -18,7 +17,6 @@ const Home = () => {
           </div>
         </div>
         <div className="hero-image">
-          {/* UPDATED: Path changed to root, assuming image is in /public/ */}
           <img src="/placement-illustration.svg" alt="Illustration" />
         </div>
       </header>

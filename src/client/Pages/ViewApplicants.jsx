@@ -1,4 +1,3 @@
-// src/client/Pages/ViewApplicants.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -6,7 +5,7 @@ import Header from '../header.jsx';
 import '../index.css';
 
 export default function ViewApplicants() {
-    const { jobId } = useParams(); // Get the jobId from the URL
+    const { jobId } = useParams();
     const navigate = useNavigate();
     
     const [applications, setApplications] = useState([]);
@@ -46,7 +45,6 @@ export default function ViewApplicants() {
     }, [jobId, navigate]);
 
     const handleUpdateStatus = async (applicationId, currentStatus, studentName) => {
-        // Re-using the logic from the dashboard
         const newStatus = prompt(`Change status for ${studentName}.\nCurrent: ${currentStatus}\nEnter new status:`);
         
         if (!newStatus || newStatus.trim().toLowerCase() === currentStatus.toLowerCase()) {
@@ -64,7 +62,6 @@ export default function ViewApplicants() {
             );
             
             setSuccessMessage(res.data.message); 
-            // Update the state locally
             setApplications(applications.map(app => 
                 app._id === applicationId ? { ...app, status: newStatusTrimmed } : app
             ));

@@ -1,5 +1,3 @@
-// src/server/server.js
-
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -10,7 +8,7 @@ import applicationRoutes from './Routes/applicationRoutes.js';
 import interviewRoutes from './Routes/interviewRoutes.js';
 import studentRoutes from './Routes/studentRoutes.js';
 import adminRoutes from './Routes/adminRoutes.js';
-import companyRoutes from './Routes/companyRoutes.js'; // <-- IMPORT NEW
+import companyRoutes from './Routes/companyRoutes.js'; 
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -40,7 +38,7 @@ app.use('/api', applicationRoutes);
 app.use('/api', interviewRoutes);
 app.use('/api', studentRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api', companyRoutes); // <-- USE NEW COMPANY ROUTES
+app.use('/api', companyRoutes);
 
 // Start server
 app.listen(3000, () => {

@@ -1,4 +1,3 @@
-// src/client/Pages/browseJobs.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
@@ -14,19 +13,15 @@ export default function BrowseJobs() {
     const [userRole, setUserRole] = useState('');
     const [studentId, setStudentId] = useState('');
     const [appliedJobIds, setAppliedJobIds] = useState(new Set());
-
-    // --- NEW STATES FOR FILTERS ---
     const [filters, setFilters] = useState({
         search: '',
         location: ''
     });
     const [isSearching, setIsSearching] = useState(false);
-    // --- END NEW STATES ---
-
-    // Encapsulate fetch logic to call it from multiple places
+   
     const fetchJobsAndApps = async () => {
         setLoading(true);
-        setError(''); // Clear error on new search
+        setError(''); 
         try {
             const token = localStorage.getItem('token');
             const role = localStorage.getItem('role');
@@ -40,24 +35,22 @@ export default function BrowseJobs() {
             setUserRole(role);
             setStudentId(userId);
 
-            // --- UPDATED API CALL ---
-            // Pass filters as query params
+           
             const params = {};
             if (filters.search) params.search = filters.search;
             if (filters.location) params.location = filters.location;
 
             const jobsRes = await axios.get('http://localhost:3000/api/jobs', {
                 headers: { Authorization: `Bearer ${token}` },
-                params: params // Send the query params
+                params: params 
             });
-            // --- END UPDATED API CALL ---
-            
+           
             setJobs(jobsRes.data.jobs);
             if (jobsRes.data.jobs.length === 0) {
                 setError('No jobs found matching your criteria.');
             }
 
-            // Fetch student's existing applications (this can stay the same)
+            
             const appsRes = await axios.get(`http://localhost:3000/api/student/applications/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
@@ -72,16 +65,15 @@ export default function BrowseJobs() {
             }
         } finally {
             setLoading(false);
-            setIsSearching(false); // Done searching
+            setIsSearching(false); 
         }
     };
 
-    // Initial fetch on component mount
+    
     useEffect(() => {
         fetchJobsAndApps();
-    }, [navigate]); // Only run once on mount
+    }, [navigate]); 
 
-    // --- NEW HANDLERS ---
     const handleFilterChange = (e) => {
         setFilters({
             ...filters,
@@ -92,10 +84,9 @@ export default function BrowseJobs() {
     const handleSearch = (e) => {
         e.preventDefault();
         setIsSearching(true);
-        fetchJobsAndApps(); // Refetch with new filters
+        fetchJobsAndApps();
     };
-    // --- END NEW HANDLERS ---
-
+   
     const handleApply = async (jobId) => {
         setError('');
         setSuccessMessage('');
@@ -132,7 +123,7 @@ export default function BrowseJobs() {
             <div className="browse-jobs-container">
                 <h1 className="browse-jobs-title">Browse Available Jobs</h1>
 
-                {/* --- NEW SEARCH FORM --- */}
+               
                 <form onSubmit={handleSearch} className="search-form">
                     <input
                         type="text"
@@ -154,11 +145,11 @@ export default function BrowseJobs() {
                         {isSearching ? 'Searching...' : 'Search'}
                     </button>
                 </form>
-                {/* --- END NEW SEARCH FORM --- */}
+               
 
                 {successMessage && <div className="login-success" style={{ textAlign: 'center', margin: '20px 0' }}>{successMessage}</div>}
                 
-                {/* Updated Loading/Error checks */}
+               
                 {loading ? (
                     <p style={{ textAlign: 'center', fontSize: '1.2em', marginTop: '20px' }}>Loading jobs...</p>
                 ) : error ? (

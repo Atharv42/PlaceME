@@ -1,11 +1,8 @@
-/* Login.css */
-/* Body background for the login page */
 body {
   background: #f8fafc;
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }
 
-/* Container centering */
 .login-container {
   min-height: 100vh;
   display: flex;

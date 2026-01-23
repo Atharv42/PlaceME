@@ -1,9 +1,7 @@
-// src/client/Pages/login.jsx
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// --- THIS IS THE FIX (Ensure Link is imported) ---
 import { useNavigate, useLocation, Link } from "react-router-dom"; 
-// --- END FIX ---
 import "./Login.css";
 
 function Login() {
@@ -99,9 +97,9 @@ function Login() {
         </form>
         <div className="login-links">
           <Link to="/register" className="login-link">Don’t have an account? Register</Link>
-          {/* --- THIS IS THE FIX (Changed a to Link and href to to='/forgot-password') --- */}
+          
           <Link to="/forgot-password" className="login-link">Forgot Password?</Link>
-          {/* --- END FIX --- */}
+         
         </div>
       </div>
     </div>

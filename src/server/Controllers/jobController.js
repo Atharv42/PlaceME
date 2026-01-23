@@ -1,5 +1,3 @@
-// src/server/Controllers/jobController.js
-
 import Application from '../models/applicationSchema.js';
 import Company from '../models/Company.js';
 import Job from '../models/jobSchema.js';
@@ -75,7 +73,7 @@ const getAllJobs = async (req, res) => {
     }
 };
 
-// --- NEW FUNCTION: Get a single job's details ---
+
 const getJobDetails = async (req, res) => {
     try {
         const { jobId } = req.params;
@@ -86,7 +84,7 @@ const getJobDetails = async (req, res) => {
             return res.status(404).json({ message: 'Job not found.' });
         }
 
-        // Security: Ensure the company fetching this job is the one who posted it
+       
         if (job.companyId !== companyId) {
             return res.status(403).json({ message: 'Access denied. You do not own this job.' });
         }
@@ -97,27 +95,23 @@ const getJobDetails = async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
-// --- END NEW FUNCTION ---
 
-// --- NEW FUNCTION: Update a job ---
 const updateJob = async (req, res) => {
     try {
         const { jobId } = req.params;
         const { id: companyId } = req.user;
-        const updates = req.body; // Comes from the form
-
+        const updates = req.body;
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({ message: 'Job not found.' });
         }
 
-        // Security: Ensure the company updating this job is the owner
+       
         if (job.companyId !== companyId) {
             return res.status(403).json({ message: 'Access denied. You do not own this job.' });
         }
 
-        // Apply updates
-        // We set deadline/postedDate from the update body to ensure they are correct
+        
         job.title = updates.title;
         job.description = updates.description;
         job.location = updates.location;
@@ -132,13 +126,13 @@ const updateJob = async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
-// --- END NEW FUNCTION ---
+
 
 
 export { 
     postJob, 
     getCompanyJobs, 
     getAllJobs,
-    getJobDetails, // <-- EXPORT NEW
-    updateJob      // <-- EXPORT NEW
+    getJobDetails,
+    updateJob     
 };

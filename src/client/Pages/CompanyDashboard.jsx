@@ -1,11 +1,10 @@
-// src/client/Pages/CompanyDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 import '../index.css';
 import ScheduleInterviewModal from '../Components/ScheduleInterviewModal.jsx';
-import UpdateStatusModal from '../Components/UpdateStatusModal.jsx'; // <-- IMPORT NEW MODAL
+import UpdateStatusModal from '../Components/UpdateStatusModal.jsx';
 
 export default function CompanyDashboard() {
     const navigate = useNavigate();
@@ -28,10 +27,10 @@ export default function CompanyDashboard() {
     const [showInterviewModal, setShowInterviewModal] = useState(false);
     const [selectedApplication, setSelectedApplication] = useState(null);
 
-    // --- NEW STATE FOR STATUS MODAL ---
+   
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [selectedAppForStatus, setSelectedAppForStatus] = useState(null);
-    // --- END NEW STATE ---
+   
 
     // Function to fetch all company data
     const fetchCompanyData = async () => {
@@ -115,13 +114,13 @@ export default function CompanyDashboard() {
         }
     };
 
-    // --- UPDATED: This now just OPENS the status modal ---
+   
     const handleUpdateApplicationStatus = (app) => {
         setSelectedAppForStatus(app);
         setShowStatusModal(true);
     };
 
-    // --- NEW: This function handles the API call ---
+    
     const handleSaveStatus = async (newStatus) => {
         if (!selectedAppForStatus || newStatus === selectedAppForStatus.status) {
             setShowStatusModal(false);
@@ -140,12 +139,12 @@ export default function CompanyDashboard() {
             
             setSuccessMessage(res.data.message); 
             
-            // Update the state locally
+            
             setApplications(applications.map(app => 
                 app._id === applicationId ? { ...app, status: newStatus } : app
             ));
 
-            // If "Interview Scheduled", open the next modal
+            
             if (newStatus.toLowerCase() === 'interview scheduled') {
                 setSelectedApplication({ 
                     applicationId, 
@@ -154,7 +153,7 @@ export default function CompanyDashboard() {
                     studentName, 
                     companyId: localStorage.getItem('userId') 
                 });
-                setShowInterviewModal(true); // Open interview modal
+                setShowInterviewModal(true); 
             }
 
         } catch (err) {
@@ -169,7 +168,7 @@ export default function CompanyDashboard() {
             setSelectedAppForStatus(null);
         }
     };
-    // --- END NEW FUNCTION ---
+   
 
     const handleInterviewScheduled = (newInterview) => {
         setInterviews([...interviews, newInterview]);
@@ -200,7 +199,7 @@ export default function CompanyDashboard() {
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '20px' }}>{error}</div>}
                 {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '20px' }}>{successMessage}</div>}
 
-                {/* ... Post a New Job section (unchanged) ... */}
+               
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Post a New Job Opening</h2>
                     <form onSubmit={handlePostJob}>
@@ -218,7 +217,7 @@ export default function CompanyDashboard() {
                     </form>
                 </div>
 
-                {/* ... My Job Postings section (unchanged) ... */}
+               
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>My Job Postings</h2>
                     {jobs.length === 0 ? (
@@ -257,7 +256,7 @@ export default function CompanyDashboard() {
                     )}
                 </div>
 
-                {/* --- Candidate Applications section (UPDATED) --- */}
+                
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Candidate Applications</h2>
                     {applications.length === 0 ? (
@@ -283,14 +282,14 @@ export default function CompanyDashboard() {
                                         >
                                             View Resume
                                         </button>
-                                        {/* --- UPDATED onClick --- */}
+                                       
                                         <button
                                             className="button"
                                             onClick={() => handleUpdateApplicationStatus(app)} 
                                         >
                                             Update Status
                                         </button>
-                                        {/* --- END UPDATED onClick --- */}
+                                        
                                     </div>
                                 </li>
                             ))}
@@ -298,7 +297,7 @@ export default function CompanyDashboard() {
                     )}
                 </div>
 
-                {/* ... Upcoming Interviews section (unchanged) ... */}
+               
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     <h2>Upcoming Interviews</h2>
                     {interviews.length === 0 ? (
@@ -326,8 +325,7 @@ export default function CompanyDashboard() {
                 </div>
             </div>
 
-            {/* --- ADD MODALS TO JSX --- */}
-            {/* Interview Modal */}
+          
             {showInterviewModal && selectedApplication && (
                 <ScheduleInterviewModal
                     applicationId={selectedApplication.applicationId}
@@ -340,7 +338,6 @@ export default function CompanyDashboard() {
                     onInterviewScheduled={handleInterviewScheduled}
                 />
             )}
-            {/* Status Update Modal */}
             {showStatusModal && selectedAppForStatus && (
                 <UpdateStatusModal
                     application={selectedAppForStatus}
@@ -348,7 +345,6 @@ export default function CompanyDashboard() {
                     onSave={handleSaveStatus}
                 />
             )}
-            {/* --- END ADD MODALS --- */}
         </>
     );
 }

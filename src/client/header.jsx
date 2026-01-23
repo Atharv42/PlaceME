@@ -1,16 +1,14 @@
-// src/client/header.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-
+import { useNavigate } from 'react-router-dom'; 
 export default function Header() {
-    const navigate = useNavigate(); // Initialize navigate hook
+    const navigate = useNavigate(); 
 
     const handleLogout = () => {
-        // Clear all relevant items from localStorage
+       
         localStorage.removeItem('token');
         localStorage.removeItem('role');
         localStorage.removeItem('userId');
-        // Redirect to the login page
+        
         navigate('/login');
     };
 

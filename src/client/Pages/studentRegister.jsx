@@ -1,7 +1,6 @@
-// src/components/StudentRegister.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom'; 
 
 export default function StudentRegister() {
   const navigate = useNavigate();
@@ -19,16 +18,15 @@ export default function StudentRegister() {
     confirmPassword: ''
   });
   
-  const [error, setError] = useState(''); // <-- NEW STATE
-  const [isSubmitting, setIsSubmitting] = useState(false); // <-- NEW STATE
-
+  const [error, setError] = useState(''); 
+  const [isSubmitting, setIsSubmitting] = useState(false); 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
+    setError(''); 
     setIsSubmitting(true);
 
     const {
@@ -36,7 +34,7 @@ export default function StudentRegister() {
       skills, experience, email, password, confirmPassword
     } = formData;
 
-    // Simple validations
+ 
     if (!firstName || !lastName || !email || !password || !confirmPassword || !contact || !address || !education || !skills || !experience) {
       setError("Please fill in all required fields.");
       setIsSubmitting(false);
@@ -60,17 +58,16 @@ export default function StudentRegister() {
         education,
         skills,
         experience,
-        // resumeUrl is no longer sent from here
+        
       });
 
-      // alert("Student registered successfully!"); // <-- REPLACED
-      // Redirect to login with a success message
+     
       navigate("/login", { state: { successMessage: "Registration successful! Please log in." } });
 
     } catch (error) {
       console.error("Registration error:", error);
       if (error.response && error.response.data && error.response.data.message) {
-        setError(error.response.data.message); // Show specific error from backend
+        setError(error.response.data.message); 
       } else {
         setError("Registration failed. Check your inputs or try again later.");
       }

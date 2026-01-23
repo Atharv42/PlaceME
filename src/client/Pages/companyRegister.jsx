@@ -1,7 +1,6 @@
-// src/components/CompanyRegister.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom'; // Import Link
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function CompanyRegister() {
   const navigate = useNavigate();
@@ -13,8 +12,8 @@ export default function CompanyRegister() {
     confirmPassword: ''
   });
   
-  const [error, setError] = useState(''); // <-- NEW STATE
-  const [isSubmitting, setIsSubmitting] = useState(false); // <-- NEW STATE
+  const [error, setError] = useState(''); 
+  const [isSubmitting, setIsSubmitting] = useState(false); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,15 +45,14 @@ export default function CompanyRegister() {
         companyPassword
       });
 
-      // alert("Company registered successfully!"); // <-- REPLACED
-      // Redirect to login with a success message
+    
       navigate("/login", { state: { successMessage: "Registration successful! Please log in." } });
 
 
     } catch (error) {
       console.error("Company Registration Failed:", error);
       if (error.response && error.response.data && error.response.data.message) {
-        setError(error.response.data.message); // Show specific error from backend
+        setError(error.response.data.message);
       } else {
         setError("Company registration failed.");
       }

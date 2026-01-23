@@ -1,13 +1,9 @@
-// src/server/Controllers/studentController.js
 
-import Student from '../models/Student.js'; // Import the Student model
-
-// --- NEW CODE: Function to get a student's profile ---
+import Student from '../models/Student.js'; 
 const getStudentProfile = async (req, res) => {
     try {
         const { studentId } = req.params;
-        const student = await Student.findById(studentId).select('-password'); // Exclude password from the result
-
+        const student = await Student.findById(studentId).select('-password'); 
         if (!student) {
             return res.status(404).json({ message: 'Student not found.' });
         }
@@ -18,13 +14,10 @@ const getStudentProfile = async (req, res) => {
     }
 };
 
-// --- NEW CODE: Function to update a student's profile ---
 const updateStudentProfile = async (req, res) => {
     try {
         const { studentId } = req.params;
-        const updates = req.body; // Validated by StudentProfileUpdateValidation
-
-        // Find the student and update their profile
+        const updates = req.body; 
         const updatedStudent = await Student.findByIdAndUpdate(studentId, updates, { new: true, runValidators: true }).select('-password');
 
         if (!updatedStudent) {
@@ -34,16 +27,14 @@ const updateStudentProfile = async (req, res) => {
     } catch (error)
     {
         console.error('Error updating student profile:', error);
-        // Handle potential unique constraint errors (e.g., email, contact)
-        if (error.code === 11000) { // MongoDB duplicate key error
+       
+        if (error.code === 11000) {
             return res.status(400).json({ message: 'Email or contact number already in use.' });
         }
         res.status(500).json({ message: 'Internal server error while updating profile.' });
     }
 };
-// --- END NEW CODE ---
 
-// --- NEW FUNCTION: Handle Resume Upload ---
 const uploadResume = async (req, res) => {
     try {
         const { studentId } = req.params;
@@ -52,10 +43,10 @@ const uploadResume = async (req, res) => {
             return res.status(400).json({ message: 'No file uploaded.' });
         }
 
-        // Create the URL path for the file
+       
         const resumeUrl = `http://localhost:3000/uploads/${req.file.filename}`;
 
-        // Find the student and update just the resumeUrl field
+       
         const updatedStudent = await Student.findByIdAndUpdate(
             studentId,
             { resumeUrl: resumeUrl },
@@ -77,6 +68,5 @@ const uploadResume = async (req, res) => {
         res.status(500).json({ message: 'Internal server error while uploading resume.' });
     }
 };
-// --- END NEW FUNCTION ---
 
-export { getStudentProfile, updateStudentProfile, uploadResume }; // <-- ADDED uploadResume
+export { getStudentProfile, updateStudentProfile, uploadResume }; 

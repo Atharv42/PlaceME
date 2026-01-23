@@ -1,4 +1,4 @@
-// src/client/Pages/updateProfile.jsx
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -20,10 +20,10 @@ export default function UpdateProfile() {
         resumeUrl: '',
     });
 
-    // --- NEW STATES FOR FILE UPLOAD ---
+   
     const [selectedFile, setSelectedFile] = useState(null);
     const [uploading, setUploading] = useState(false);
-    // --- END NEW STATES ---
+   
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -77,25 +77,22 @@ export default function UpdateProfile() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    // --- NEW HANDLER for file selection ---
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file && file.type !== 'application/pdf') {
             setError('Only .pdf files are allowed.');
             setSelectedFile(null);
-            e.target.value = null; // Clear the input
-        } else if (file && file.size > 5 * 1024 * 1024) { // 5MB limit
+            e.target.value = null; 
+        } else if (file && file.size > 5 * 1024 * 1024) { 
              setError('File is too large. Max 5MB allowed.');
              setSelectedFile(null);
-             e.target.value = null; // Clear the input
+             e.target.value = null; 
         } else {
             setSelectedFile(file);
-            setError(''); // Clear any previous file errors
+            setError(''); 
         }
     };
-    // --- END NEW HANDLER ---
-
-    // --- UPDATED: This now only handles text profile data ---
+   
     const handleProfileSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -115,7 +112,7 @@ export default function UpdateProfile() {
                 education: formData.education,
                 skills: formData.skills,
                 experience: formData.experience,
-                // resumeUrl is now handled separately
+                
             };
             
             const res = await axios.put(`http://localhost:3000/api/student/profile/${studentId}`, updateData, {
@@ -137,7 +134,7 @@ export default function UpdateProfile() {
         }
     };
 
-    // --- NEW FUNCTION: Handle just the resume upload ---
+   
     const handleResumeUpload = async () => {
         if (!selectedFile) {
             setError('Please select a PDF file to upload.');
@@ -152,7 +149,7 @@ export default function UpdateProfile() {
         const studentId = localStorage.getItem('userId');
         
         const uploadFormData = new FormData();
-        uploadFormData.append('resume', selectedFile); // 'resume' MUST match backend 'upload.single('resume')'
+        uploadFormData.append('resume', selectedFile); 
 
         try {
             const res = await axios.post(
@@ -161,7 +158,7 @@ export default function UpdateProfile() {
                 {
                     headers: { 
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data' // Important for file uploads
+                        'Content-Type': 'multipart/form-data' 
                     }
                 }
             );
@@ -169,7 +166,7 @@ export default function UpdateProfile() {
             setSuccessMessage(res.data.message);
             // Update the form data with the new URL
             setFormData({...formData, resumeUrl: res.data.resumeUrl});
-            setSelectedFile(null); // Clear the file input
+            setSelectedFile(null);
 
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
@@ -202,7 +199,7 @@ export default function UpdateProfile() {
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '15px' }}>{error}</div>}
                 {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '15px' }}>{successMessage}</div>}
 
-                {/* --- UPDATED FORM for TEXT data --- */}
+               
                 <form onSubmit={handleProfileSubmit}>
                     <label className="update-profile-fillup">First Name</label>
                     <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} placeholder="First Name" className="input" required />
@@ -242,10 +239,7 @@ export default function UpdateProfile() {
                         </button>
                     </div>
                 </form>
-                {/* --- END TEXT FORM --- */}
-
-
-                {/* --- NEW FORM for RESUME UPLOAD --- */}
+               
                 <hr style={{ margin: '30px 0' }} />
                 <h2 className="update-profile-title" style={{ fontSize: '20px', border: 'none', marginBottom: '20px' }}>Manage Resume</h2>
                 
@@ -274,7 +268,7 @@ export default function UpdateProfile() {
                     </button>
                     <Link to="/dashboard" className="button outline">Back to Dashboard</Link>
                 </div>
-                {/* --- END RESUME FORM --- */}
+                
             </div>
         </>
     );

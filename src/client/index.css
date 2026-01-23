@@ -1,9 +1,5 @@
-/* General Styles */
+
 body {
-  /* background-image: url("../images/leone-venter-VieM9BdZKFo-unsplash.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat; */
   margin: 0;
   font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
   color: #232e39;
@@ -39,7 +35,7 @@ body {
   padding: 7px 14px;
   border-radius: 3px;
   transition: background 0.16s, color 0.16s;
-  text-decoration: none; /* Added for consistency */
+  text-decoration: none;
 }
 .header nav a:hover, .header nav a.active {
   background: #2980b9;
@@ -138,10 +134,10 @@ body {
   font-size: 15px;
   transition: box-shadow 0.18s, background 0.18s;
   box-shadow: 0 1px 4px rgba(41, 128, 185, 0.08);
-  cursor: pointer; /* Added for consistency */
-  text-decoration: none; /* Added for consistency */
-  display: inline-block; /* Added for consistency */
-  text-align: center; /* Added for consistency */
+  cursor: pointer; 
+  text-decoration: none; 
+  display: inline-block;
+  text-align: center; 
 }
 .button:hover,
 .update-button:hover,
@@ -152,7 +148,7 @@ body {
   box-shadow: 0 4px 18px rgba(41, 128, 185, 0.14);
 }
 
-/* --- NEW: Outline button style --- */
+
 .button.outline {
   background: #fff;
   color: #2980b9;
@@ -163,7 +159,6 @@ body {
   color: #206095;
 }
 
-/* --- NEW: Disabled button style --- */
 .button:disabled,
 .update-button:disabled,
 .login-button:disabled,
@@ -195,8 +190,8 @@ body {
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
-  flex-wrap: wrap; /* Added for responsiveness */
-  gap: 10px; /* Added for spacing */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
 .list-item-details {
@@ -213,14 +208,14 @@ body {
 
 /* Login/Register Containers */
 .login-container, .register-container {
-  /* background-image: url("../images/leone-venter-VieM9BdZKFo-unsplash.jpg"); */
+  
   max-width: 500px;
   margin: 60px auto;
   padding: 32px 28px;
   border: 1px solid #e0e0e0;
   border-radius: 14px;
   box-shadow: 0 4px 24px rgba(44,62,80,0.10);
-  background: #fff; /* Changed from #fefae0 */
+  background: #fff; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -266,7 +261,7 @@ body {
   margin-bottom: 16px;
   background: #fafbfc;
   transition: border 0.18s;
-  box-sizing: border-box; /* Added for better sizing */
+  box-sizing: border-box; 
 }
 .input:focus {
   border-color: #2980b9;
@@ -274,10 +269,9 @@ body {
   outline: none;
 }
 
-/* --- NEW: Textarea styling (reuse input) --- */
 textarea.input {
-  height: auto; /* Allow auto-resize */
-  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; /* Match font */
+  height: auto; 
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
 }
 
 
@@ -296,7 +290,6 @@ textarea.input {
   text-decoration: underline;
 }
 
-/* --- NEW: Error and Success Message Styles --- */
 .login-error {
   color: #e74c3c;
   font-size: 14px;
@@ -305,13 +298,12 @@ textarea.input {
   font-weight: 500;
 }
 .login-success {
-  color: #27ae60; /* Green color */
+  color: #27ae60; 
   font-size: 14px;
   margin: 7px 0 5px 0;
   text-align: center;
   font-weight: 500;
 }
-/* --- END NEW --- */
 
 
 /* Update Profile */
@@ -321,8 +313,8 @@ textarea.input {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(44,62,80,0.06);
   padding: 24px;
-  max-width: 800px; /* Added max-width */
-  margin: 40px auto; /* Centered */
+  max-width: 800px; 
+  margin: 40px auto;
 }
 
 .update-profile-title {
@@ -339,11 +331,11 @@ textarea.input {
 
 .update-profile-fillup {
   margin-left: 18px;
-  font-size: 16px; /* Reduced size */
+  font-size: 16px; 
   font-weight: bold;
   color: #555;
-  margin-bottom: 8px; /* Reduced margin */
-  display: block; /* Make it a block */
+  margin-bottom: 8px; 
+  display: block; 
 }
 
 .update-button {
@@ -451,7 +443,6 @@ textarea.input {
   margin-bottom: 22px;
 }
 
-/* Responsive Tweaks */
 @media (max-width: 600px) {
   .dashboard-container, .dashboard-section, .login-container, .register-container, .update-profile-container, .job-listing {
     padding: 12px !important;
@@ -466,7 +457,7 @@ textarea.input {
     font-size: 20px;
   }
   .header nav {
-    margin-top: 10px; /* Added margin */
+    margin-top: 10px; 
   }
   .header nav a {
     margin-left: 10px;
@@ -477,7 +468,7 @@ textarea.input {
 
 .header-logout-button {
   background: none;
-  border: 1px solid #f3f3f3; /* Light border */
+  border: 1px solid #f3f3f3; 
   color: #f3f3f3;
   margin-left: 20px;
   font-size: 15px;
@@ -486,17 +477,16 @@ textarea.input {
   border-radius: 3px;
   cursor: pointer;
   transition: background 0.16s, color 0.16s, border-color 0.16s;
-  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; /* Match font */
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; 
 }
 
 .header-logout-button:hover {
-  background: #2980b9; /* Match active nav link hover */
+  background: #2980b9;
   border-color: #2980b9;
   color: #fff;
 }
 
 
-/* --- NEW: Modal Styles --- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -530,8 +520,7 @@ textarea.input {
   gap: 12px;
   margin-top: 24px;
 }
-/* --- END MODAL --- */
-/* --- NEW STYLES FOR SEARCH FORM --- */
+
 .search-form {
   display: flex;
   gap: 15px;
@@ -543,12 +532,12 @@ textarea.input {
 }
 
 .search-form .input {
-  margin-bottom: 0; /* Override default margin */
-  flex-grow: 1; /* Allow inputs to grow */
+  margin-bottom: 0;
+  flex-grow: 1; 
 }
 
 .search-form .button {
-  flex-shrink: 0; /* Prevent button from shrinking */
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
@@ -556,4 +545,3 @@ textarea.input {
     flex-direction: column;
   }
 }
-/* --- END NEW STYLES --- */

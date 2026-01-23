@@ -1,5 +1,3 @@
-// src/server/Middleware/authMiddleware.js
-
 import jwt from 'jsonwebtoken';
 
 export const verifyToken = (req, res, next) => {
@@ -12,10 +10,9 @@ export const verifyToken = (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        // --- THIS IS THE FIX ---
-        // Removed the hardcoded fallback
+       
         const decoded = jwt.verify(token, process.env.JWT_SECRET); 
-        // --- END FIX ---
+      
 
         req.user = decoded;
         next();
@@ -24,7 +21,6 @@ export const verifyToken = (req, res, next) => {
     }
 };
 
-// Optional role-checker middleware
 export const checkRole = (role) => {
     return (req, res, next) => {
         if (req.user.role !== role) {

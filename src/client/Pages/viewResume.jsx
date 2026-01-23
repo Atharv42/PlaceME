@@ -1,8 +1,7 @@
-// src/client/Pages/viewResume.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import Header from '../header.jsx'; // Use standard header
+import Header from '../header.jsx';
 
 export default function ViewResume() {
     const navigate = useNavigate();
@@ -99,7 +98,7 @@ export default function ViewResume() {
 
                 <h1 className="resume-title">Skills</h1>
                 <ul className="resume-list">
-                    {/* Assuming skills is a comma-separated string */}
+                   
                     {student.skills.split(',').map((skill, index) => (
                         <li key={index}>{skill.trim()}</li>
                     ))}

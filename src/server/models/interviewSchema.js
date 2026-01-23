@@ -1,4 +1,3 @@
-// src/server/models/interviewSchema.js
 import mongoose from "mongoose";
 
 const interviewSchema = new mongoose.Schema({
@@ -14,7 +13,7 @@ const interviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // --- NEW FIELDS ---
+   
     jobTitle: {
         type: String,
         required: true,
@@ -23,7 +22,7 @@ const interviewSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // --- END NEW FIELDS ---
+
     date: {
         type: Date,
         required: true,
@@ -38,12 +37,12 @@ const interviewSchema = new mongoose.Schema({
     },
     link: {
         type: String,
-        required: false, // <-- UPDATED: Was 'true'. Not required for On-site/Phone
+        required: false, 
     }
 }, {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true, 
 });
 
-// Check if the model already exists before compiling
+
 const Interview = mongoose.models.Interview || mongoose.model('Interview', interviewSchema);
 export default Interview;
