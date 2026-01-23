@@ -1,4 +1,3 @@
-// src/components/LogoutButton.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,12 +5,12 @@ const LogoutButton = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear token and user data
+    
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('userId');
 
-    // Redirect to login
+   
     navigate('/login');
   };
 

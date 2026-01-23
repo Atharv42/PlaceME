@@ -1,8 +1,7 @@
-// src/client/Pages/AdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
-import Header from '../header.jsx'; // We can reuse the header
+import Header from '../header.jsx';
 import '../index.css';
 
 export default function AdminDashboard() {
@@ -143,14 +142,14 @@ export default function AdminDashboard() {
 
     return (
         <>
-            <Header /> {/* We can customize this later to an <AdminHeader /> */}
+            <Header /> 
             <div className="dashboard-container">
                 <h1 className="browse-jobs-title">Admin Dashboard</h1>
 
                 {error && <div className="login-error" style={{ textAlign: 'center', marginBottom: '20px' }}>{error}</div>}
                 {successMessage && <div className="login-success" style={{ textAlign: 'center', marginBottom: '20px' }}>{successMessage}</div>}
                 
-                {/* Admin Navigation */}
+                
                 <div className="dashboard-section quick-actions" style={{ flexBasis: '100%' }}>
                     <div className="like-buttons">
                         <button className={`button ${view === 'stats' ? '' : 'outline'}`} onClick={() => setView('stats')}>Dashboard Stats</button>
@@ -160,7 +159,7 @@ export default function AdminDashboard() {
                     </div>
                 </div>
 
-                {/* Content Area */}
+                
                 <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                     {loading ? (
                         <p>Loading...</p>
@@ -245,5 +244,3 @@ export default function AdminDashboard() {
         </>
     );
 }
-
-//waky imiz onhx cbof

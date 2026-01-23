@@ -1,10 +1,8 @@
-// src/server/Middleware/authValidation.js
 
 import joi from 'joi';
 
 const StudentSignup = (req, res, next) => {
-    // ... (existing StudentSignup code... no changes)
-    // console.log("Attempting registration for:", email);
+   
     const Schema = joi.object({
         firstName: joi.string().min(2).max(30).required(),
         lastName: joi.string().min(2).max(30).required(),
@@ -20,14 +18,14 @@ const StudentSignup = (req, res, next) => {
 
     const { error } = Schema.validate(req.body);
     if (error) {
-        console.error("Student Signup Error:", error); // Log the actual error
+        console.error("Student Signup Error:", error);
         res.status(500).json({ message: "Internal server error" });
     }
     next();
 };
 
 const CompanySignup = (req, res, next) => {
-    // ... (existing CompanySignup code... no changes)
+
     const Schema = joi.object({
         companyName: joi.string().min(2).max(50).required(),
         companyEmail: joi.string().email().required(),
@@ -36,13 +34,13 @@ const CompanySignup = (req, res, next) => {
 
     const { error } = Schema.validate(req.body);
     if (error) {
-        console.error("Company Signup Error:", error); // Log the actual error
+        console.error("Company Signup Error:", error); 
     res.status(500).json({ message: "Internal server error" });
     }
     next();
 };
 
-// --- NEW VALIDATION ---
+
 const AdminSignup = (req, res, next) => {
     const Schema = joi.object({
         adminName: joi.string().min(2).max(50).required(),
@@ -56,10 +54,10 @@ const AdminSignup = (req, res, next) => {
     }
     next();
 };
-// --- END NEW VALIDATION ---
+
 
 const LoginValidation = (req, res, next) => {
-    // ... (existing LoginValidation code... no changes)
+    
     const Schema = joi.object({
         email: joi.string().email().required(),
         password: joi.string().min(6).max(30).required(),
@@ -73,7 +71,7 @@ const LoginValidation = (req, res, next) => {
 };
 
 const JobPostingValidation = (req, res, next) => {
-    // ... (existing JobPostingValidation code... no changes)
+    
     const Schema = joi.object({
         companyId: joi.string().required(),
         title: joi.string().min(3).max(100).required(),
@@ -93,7 +91,7 @@ const JobPostingValidation = (req, res, next) => {
 };
 
 const ApplyJobValidation = (req, res, next) => {
-    // ... (existing ApplyJobValidation code... no changes)
+    
     const Schema = joi.object({
         jobId: joi.string().required(),
         studentId: joi.string().required(),
@@ -107,7 +105,7 @@ const ApplyJobValidation = (req, res, next) => {
 };
 
 const InterviewSchedulingValidation = (req, res, next) => {
-    // ... (existing InterviewSchedulingValidation code... no changes)
+    
     const Schema = joi.object({
         applicationId: joi.string().required(),
         companyId: joi.string().required(),
@@ -128,7 +126,7 @@ const InterviewSchedulingValidation = (req, res, next) => {
 };
 
 const StudentProfileUpdateValidation = (req, res, next) => {
-    // ... (existing StudentProfileUpdateValidation code... no changes)
+ 
     const Schema = joi.object({
         firstName: joi.string().min(2).max(30).optional(), 
         lastName: joi.string().min(2).max(30).optional(),
@@ -149,7 +147,7 @@ const StudentProfileUpdateValidation = (req, res, next) => {
 };
 
 const UpdateStatusValidation = (req, res, next) => {
-    // ... (existing UpdateStatusValidation code... no changes)
+  
     const Schema = joi.object({
         status: joi.string().min(3).max(50).required()
     });
@@ -162,13 +160,11 @@ const UpdateStatusValidation = (req, res, next) => {
 };
 const CompanyProfileUpdateValidation = (req, res, next) => {
     const Schema = joi.object({
-        // companyName might be updatable, but needs care if used elsewhere
-        // companyName: joi.string().min(2).max(50).optional(),
-        website: joi.string().uri({ allowRelative: false }).allow('').optional(), // Allow empty string or valid URI
-        description: joi.string().max(1000).allow('').optional(), // Max 1000 chars, allow empty
-        logoUrl: joi.string().uri({ allowRelative: false }).allow('').optional(), // Allow empty string or valid URI
-        // Don't allow changing email or password here
-    }).min(1); // At least one field must be present for update
+        
+        website: joi.string().uri({ allowRelative: false }).allow('').optional(),
+        description: joi.string().max(1000).allow('').optional(), 
+        logoUrl: joi.string().uri({ allowRelative: false }).allow('').optional(), 
+    }).min(1);
 
     const { error } = Schema.validate(req.body);
     if (error) {
@@ -176,10 +172,10 @@ const CompanyProfileUpdateValidation = (req, res, next) => {
     }
     next();
 };
-// --- END NEW VALIDATION ---
+
 
 export {
-    // ... (Keep ALL existing exports) ...
+   
     StudentSignup,
     CompanySignup,
     AdminSignup,
@@ -189,5 +185,5 @@ export {
     StudentProfileUpdateValidation,
     InterviewSchedulingValidation,
     UpdateStatusValidation,
-    CompanyProfileUpdateValidation // <-- EXPORT NEW
+    CompanyProfileUpdateValidation 
 };

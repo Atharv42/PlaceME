@@ -1,4 +1,3 @@
-// src/server/Routes/adminRoutes.js
 import express from 'express';
 import { verifyToken, checkRole } from '../Middleware/authMiddleware.js';
 import {
@@ -14,11 +13,9 @@ import {
 
 const router = express.Router();
 
-// All routes in this file are protected and require admin role
 router.use(verifyToken);
 router.use(checkRole('admin'));
 
-// GET routes
 router.get('/stats', getDashboardStats);
 router.get('/students', getAllStudents);
 router.get('/companies', getAllCompanies);

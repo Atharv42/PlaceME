@@ -45,7 +45,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
       <Routes>
-        {/* Public Routes */}
+        
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -56,13 +56,13 @@ createRoot(document.getElementById('root')).render(
         <Route path="/reset-password/:token" element={<ResetPassword />} /> 
         <Route path="*" element={<Home />} /> 
 
-        {/* Admin Protected Route */}
+      
         <Route
           path="/admin-dashboard"
           element={ <PrivateRoute allowedRoles={['admin']}> <AdminDashboard /> </PrivateRoute> }
         />
 
-        {/* Company Protected Routes */}
+       
         <Route
           path="/company-dashboard"
           element={ <PrivateRoute allowedRoles={['company']}> <CompanyDashboard /> </PrivateRoute> }
@@ -75,15 +75,12 @@ createRoot(document.getElementById('root')).render(
           path="/jobs/:jobId/edit"
           element={ <PrivateRoute allowedRoles={['company']}> <EditJob /> </PrivateRoute> }
         />
-        {/* --- NEW COMPANY ROUTES --- */}
+        
         <Route
           path="/edit-company-profile"
           element={ <PrivateRoute allowedRoles={['company']}> <EditCompanyProfile /> </PrivateRoute> }
         />
-        {/* --- END NEW COMPANY ROUTES --- */}
-
-
-        {/* Student Protected Routes (and view company profile) */}
+       
         <Route
           path="/dashboard"
           element={ <PrivateRoute allowedRoles={['student']}> <Dashboard /> </PrivateRoute> }
@@ -105,12 +102,12 @@ createRoot(document.getElementById('root')).render(
           element={ <PrivateRoute allowedRoles={['student']}> <ViewAllApplications /> </PrivateRoute> } 
         />
         
-        {/* --- NEW ROUTE (Accessible by logged-in users, e.g., students) --- */}
+        
         <Route 
           path="/company-profile/:companyId" 
           element={ <PrivateRoute allowedRoles={['student', 'company', 'admin']}> <ViewCompanyProfile /> </PrivateRoute> } 
         />
-         {/* --- END NEW ROUTE --- */}
+         
       </Routes>
     </Router>
   </StrictMode>

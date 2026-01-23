@@ -1,10 +1,9 @@
-// src/server/Controllers/adminController.js
+
 
 import Student from '../models/Student.js';
 import Company from '../models/Company.js';
 import Job from '../models/jobSchema.js';
 
-// Get counts for dashboard widgets
 export const getDashboardStats = async (req, res) => {
     try {
         const studentCount = await Student.countDocuments();
@@ -80,7 +79,7 @@ export const deleteStudent = async (req, res) => {
         if (!student) {
             return res.status(404).json({ message: "Student not found" });
         }
-        // You might also want to delete their applications
+        
         res.status(200).json({ message: "Student deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
@@ -95,7 +94,7 @@ export const deleteCompany = async (req, res) => {
         if (!company) {
             return res.status(404).json({ message: "Company not found" });
         }
-        // You might also want to delete their jobs, applications, interviews
+       
         res.status(200).json({ message: "Company deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
@@ -110,7 +109,7 @@ export const deleteJob = async (req, res) => {
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
-        // You might also want to delete applications for this job
+       
         res.status(200).json({ message: "Job deleted successfully" });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

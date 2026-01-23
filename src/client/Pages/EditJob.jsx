@@ -1,4 +1,3 @@
-// src/client/Pages/EditJob.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -20,7 +19,7 @@ export default function EditJob() {
         title: '',
         description: '',
         location: '',
-        skillsRequired: '', // We'll join/split this
+        skillsRequired: '', 
         deadline: '',
     });
     const [loading, setLoading] = useState(true);
@@ -46,8 +45,8 @@ export default function EditJob() {
                     title: job.title,
                     description: job.description,
                     location: job.location,
-                    skillsRequired: job.skillsRequired.join(', '), // Join array to string for input
-                    deadline: formatDateForInput(job.deadline), // Format date
+                    skillsRequired: job.skillsRequired.join(', '), 
+                    deadline: formatDateForInput(job.deadline), 
                 });
 
             } catch (err) {
@@ -76,18 +75,18 @@ export default function EditJob() {
 
         try {
             const token = localStorage.getItem('token');
-            const companyId = localStorage.getItem('userId'); // Get this for the payload
-            const companyName = "My Company"; // This should come from company profile eventually
+            const companyId = localStorage.getItem('userId'); 
+            const companyName = "My Company"; 
 
-            // Prepare the payload
+            
             const updatePayload = {
                 ...jobData,
                 skillsRequired: jobData.skillsRequired.split(',').map(skill => skill.trim()),
                 deadline: new Date(jobData.deadline).toISOString(),
-                // Add fields required by validation (even if not edited)
+               
                 companyId: companyId,
                 company: companyName,
-                postedDate: new Date().toISOString() // Or fetch the original postedDate
+                postedDate: new Date().toISOString() 
             };
             
             const res = await axios.put(`http://localhost:3000/api/jobs/${jobId}`, updatePayload, {
@@ -95,7 +94,7 @@ export default function EditJob() {
             });
 
             setSuccessMessage('Job updated successfully!');
-            // You might want to redirect after a delay
+           
             setTimeout(() => {
                  navigate('/company-dashboard');
             }, 1500);
@@ -124,7 +123,7 @@ export default function EditJob() {
     return (
         <>
             <Header />
-            <div className="update-profile-container"> {/* Re-using update profile styles */}
+            <div className="update-profile-container">
                 <Link to="/company-dashboard" className="button outline" style={{ marginBottom: '20px' }}>
                     &larr; Back to Dashboard
                 </Link>

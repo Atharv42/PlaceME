@@ -1,8 +1,7 @@
-// src/client/Pages/ResetPassword.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import '../Pages/Login.css'; // Reuse login page styles
+import '../Pages/Login.css'; 
 
 export default function ResetPassword() {
     const { token } = useParams(); // Get token from URL
@@ -33,7 +32,7 @@ export default function ResetPassword() {
         try {
             const res = await axios.post(`http://localhost:3000/api/reset-password/${token}`, { password });
             setMessage(res.data.message);
-            // Redirect to login after a short delay
+           
             setTimeout(() => {
                 navigate('/login', { state: { successMessage: res.data.message } });
             }, 2000); // 2 seconds delay
@@ -60,7 +59,7 @@ export default function ResetPassword() {
                 {message && <div className="login-success" style={{ marginBottom: '15px' }}>{message}</div>}
                 {error && <div className="login-error" style={{ marginBottom: '15px' }}>{error}</div>}
 
-                {/* Hide form after success */}
+               
                 {!message && (
                     <form onSubmit={handleSubmit}>
                         <label className="login-label" htmlFor="password">New Password</label>

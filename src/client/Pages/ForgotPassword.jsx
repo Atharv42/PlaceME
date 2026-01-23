@@ -1,8 +1,8 @@
-// src/client/Pages/ForgotPassword.jsx
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import '../Pages/Login.css'; // Reuse login page styles
+import '../Pages/Login.css'; 
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState('');
@@ -18,7 +18,7 @@ export default function ForgotPassword() {
 
         try {
             const res = await axios.post('http://localhost:3000/api/forgot-password', { email });
-            setMessage(res.data.message); // Show the success message from backend
+            setMessage(res.data.message); 
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);

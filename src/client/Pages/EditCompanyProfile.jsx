@@ -1,14 +1,13 @@
-// src/client/Pages/EditCompanyProfile.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
-import '../index.css'; // Reuse general styles
+import '../index.css';
 
 export default function EditCompanyProfile() {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
-        companyName: '', // Display only, not editable here
+        companyName: '', 
         website: '',
         description: '',
         logoUrl: '',
@@ -36,7 +35,7 @@ export default function EditCompanyProfile() {
 
                 const profile = res.data.company;
                 setFormData({
-                    companyName: profile.companyName || '', // From fetched data
+                    companyName: profile.companyName || '', 
                     website: profile.website || '',
                     description: profile.description || '',
                     logoUrl: profile.logoUrl || '',
@@ -67,7 +66,6 @@ export default function EditCompanyProfile() {
             const token = localStorage.getItem('token');
             const companyId = localStorage.getItem('userId');
 
-            // Only send fields that can be updated
             const updateData = {
                 website: formData.website,
                 description: formData.description,
@@ -79,10 +77,10 @@ export default function EditCompanyProfile() {
             });
 
             setSuccessMessage(res.data.message);
-            // Update formData with potentially cleaned data from backend
+            
             const updatedProfile = res.data.company;
              setFormData({
-                 companyName: updatedProfile.companyName, // Keep name
+                 companyName: updatedProfile.companyName, 
                  website: updatedProfile.website || '',
                  description: updatedProfile.description || '',
                  logoUrl: updatedProfile.logoUrl || '',
@@ -112,7 +110,7 @@ export default function EditCompanyProfile() {
     return (
         <>
             <Header />
-            {/* Reuse update-profile styles */}
+         
             <div className="update-profile-container">
                  <Link to="/company-dashboard" className="button outline" style={{ marginBottom: '20px' }}>
                     &larr; Back to Dashboard

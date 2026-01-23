@@ -1,12 +1,11 @@
-// src/client/Pages/ViewCompanyProfile.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
-import '../index.css'; // Reuse general styles
+import '../index.css'; 
 
 export default function ViewCompanyProfile() {
-    const { companyId } = useParams(); // Get ID from URL
+    const { companyId } = useParams(); 
     const navigate = useNavigate();
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -17,7 +16,7 @@ export default function ViewCompanyProfile() {
             try {
                 const token = localStorage.getItem('token');
                 if (!token) {
-                    navigate('/login'); // Must be logged in to view
+                    navigate('/login'); 
                     return;
                 }
 
@@ -78,7 +77,7 @@ export default function ViewCompanyProfile() {
         <>
             <Header />
             <div className="dashboard-container">
-                {/* Allow going back to job browsing */}
+                
                 <Link to="/dashboard/newJobs" className="button outline" style={{ marginBottom: '20px', flexBasis: '100%' }}>
                     &larr; Back to Browse Jobs
                 </Link>
@@ -106,16 +105,12 @@ export default function ViewCompanyProfile() {
                 {company.description && (
                      <div className="dashboard-section" style={{ flexBasis: '100%' }}>
                         <h2>About {company.companyName}</h2>
-                        {/* Display description preserving line breaks */}
+                        
                         <p style={{ whiteSpace: 'pre-wrap' }}>{company.description}</p>
                     </div>
                 )}
 
-                {/* Optional: Add a section to show jobs posted by this company */}
-                {/* <div className="dashboard-section" style={{ flexBasis: '100%' }}>
-                    <h2>Jobs Posted by {company.companyName}</h2>
-                    <p>(Feature coming soon)</p>
-                </div> */}
+               
             </div>
         </>
     );

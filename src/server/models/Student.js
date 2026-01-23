@@ -1,4 +1,3 @@
-// src/server/models/Student.js
 import mongoose from "mongoose";
 
 const registerSchema = new mongoose.Schema({
@@ -42,13 +41,11 @@ const registerSchema = new mongoose.Schema({
     }, 
     resumeUrl: {
         type: String,
-        required: false, // <-- UPDATED: Was 'true'
+        required: false, 
     }
 }, {
-    timestamps: true, // Automatically manage createdAt and updatedAt fields
+    timestamps: true, 
 });
-
-// Check if the model already exists before compiling
 const Student = mongoose.models.Student || mongoose.model('Student', registerSchema);
 
 export default Student;

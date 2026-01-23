@@ -1,22 +1,21 @@
-// src/server/Controllers/applicationController.js
 
 import Application from '../models/applicationSchema.js'; 
 import Job from '../models/jobSchema.js'; 
 import Student from '../models/Student.js'; 
 
-// Function to get applications for a company's jobs
+
 const getCompanyApplications = async (req, res) => {
     try {
         const { companyId } = req.params; 
 
-        // 1. Find all jobs posted by this company
+       
         const companyJobs = await Job.find({ companyId: companyId });
         const jobIds = companyJobs.map(job => job._id.toString()); 
 
-        // 2. Find all applications for these jobs
+       
         const applications = await Application.find({ jobId: { $in: jobIds } });
 
-        // 3. For each application, fetch student details
+       
         const applicationsWithStudentDetails = await Promise.all(applications.map(async (app) => {
             const student = await Student.findById(app.studentId);
             const jobTitle = companyJobs.find(job => job._id.toString() === app.jobId)?.title;
@@ -27,7 +26,7 @@ const getCompanyApplications = async (req, res) => {
                 studentId: app.studentId,
                 status: app.status,
                 appliedDate: app.appliedDate,
-                // Include student details
+               
                 studentName: student ? `${student.firstName} ${student.lastName}` : 'Unknown Student',
                 studentEmail: student ? student.email : 'N/A',
                 studentContact: student ? student.contact : 'N/A',
@@ -63,8 +62,8 @@ const applyForJob = async (req, res) => {
         const newApplication = new Application({
             jobId,
             studentId,
-            status: 'Applied', // Default status for a new application
-            appliedDate: new Date(), // Set current date
+            status: 'Applied',
+            appliedDate: new Date(),
         });
 
         await newApplication.save();
@@ -75,15 +74,14 @@ const applyForJob = async (req, res) => {
     }
 };
 
-// Function to get applications for a specific student
+
 const getStudentApplications = async (req, res) => {
     try {
         const { studentId } = req.params; 
 
-        // Find all applications for this student
         const applications = await Application.find({ studentId: studentId });
 
-        // For each application, fetch job details (title, company)
+       
         const applicationsWithJobDetails = await Promise.all(applications.map(async (app) => {
             const job = await Job.findById(app.jobId);
 
@@ -93,7 +91,7 @@ const getStudentApplications = async (req, res) => {
                 studentId: app.studentId,
                 status: app.status,
                 appliedDate: app.appliedDate,
-                // Include job details
+                
                 jobTitle: job ? job.title : 'Unknown Job',
                 companyName: job ? job.company : 'Unknown Company'
             };
@@ -106,7 +104,6 @@ const getStudentApplications = async (req, res) => {
     }
 };
 
-// Function for company to update an application status
 const updateApplicationStatus = async (req, res) => {
     try {
         const { applicationId } = req.params;
@@ -119,8 +116,7 @@ const updateApplicationStatus = async (req, res) => {
             return res.status(404).json({ message: 'Application not found.' });
         }
 
-        // Security check: Ensure the company updating this application
-        // is the one who posted the job.
+        
         const job = await Job.findById(application.jobId);
         if (!job) {
             return res.status(404).json({ message: 'Associated job not found.' });
@@ -140,14 +136,12 @@ const updateApplicationStatus = async (req, res) => {
         res.status(500).json({ message: 'Internal server error while updating status.' });
     }
 };
-
-// --- NEW FUNCTION ---
 const getApplicationsForJob = async (req, res) => {
     try {
         const { jobId } = req.params;
         const { id: companyId } = req.user; // Get companyId from token
 
-        // Security Check: Find the job and verify the company owns it
+        
         const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({ message: 'Job not found.' });
@@ -159,10 +153,10 @@ const getApplicationsForJob = async (req, res) => {
         // Find applications for this job
         const applications = await Application.find({ jobId: jobId });
 
-        // For each application, fetch student details
+        
         const applicationsWithDetails = await Promise.all(applications.map(async (app) => {
-            const student = await Student.findById(app.studentId).select('-password'); // Exclude password
-            if (!student) return null; // Skip if student not found
+            const student = await Student.findById(app.studentId).select('-password'); 
+            if (!student) return null; 
 
             return {
                 _id: app._id,
@@ -174,11 +168,11 @@ const getApplicationsForJob = async (req, res) => {
                 studentEmail: student.email,
                 studentContact: student.contact,
                 studentResumeUrl: student.resumeUrl,
-                jobTitle: job.title // We already have the job title
+                jobTitle: job.title 
             };
         }));
         
-        // Filter out any null results (if a student was deleted)
+    
         const validApplications = applicationsWithDetails.filter(app => app !== null);
 
         res.status(200).json({ applications: validApplications, jobTitle: job.title });
@@ -187,12 +181,12 @@ const getApplicationsForJob = async (req, res) => {
         res.status(500).json({ message: 'Internal server error.' });
     }
 };
-// --- END NEW FUNCTION ---
+
 
 export { 
     getCompanyApplications, 
     applyForJob, 
     getStudentApplications,
     updateApplicationStatus,
-    getApplicationsForJob // <-- EXPORT NEW
+    getApplicationsForJob 
 };
