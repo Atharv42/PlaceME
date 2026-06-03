@@ -1,1 +1,3 @@
-export default { secretKey: 'REDACTED_ROTATE_JWT_SECRET' };
+// All configuration is loaded from environment variables via dotenv.
+// See src/server/.env.example for the required variables.
+export default {};

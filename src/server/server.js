@@ -21,9 +21,22 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 
-// Middleware
+// CORS — allow the Vite dev server locally and the deployed Vercel frontend in production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    process.env.CLIENT_URL,
+].filter(Boolean);
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        callback(new Error(`CORS: origin ${origin} not allowed`));
+    },
+    credentials: true,
+}));
+
 app.use(express.json());
-app.use(cors());
 
 // Serve static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

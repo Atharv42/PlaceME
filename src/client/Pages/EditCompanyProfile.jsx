@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 import '../index.css';
@@ -29,7 +29,7 @@ export default function EditCompanyProfile() {
                     return;
                 }
 
-                const res = await axios.get(`/api/company/profile/${companyId}`, {
+                const res = await api.get(`/api/company/profile/${companyId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -72,7 +72,7 @@ export default function EditCompanyProfile() {
                 logoUrl: formData.logoUrl,
             };
 
-            const res = await axios.put(`/api/company/profile/${companyId}`, updateData, {
+            const res = await api.put(`/api/company/profile/${companyId}`, updateData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

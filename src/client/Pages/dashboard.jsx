@@ -1,6 +1,6 @@
 ﻿// src/client/Pages/dashboard.jsx
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../api.js";
 import { Link, useNavigate } from 'react-router-dom'; // Make sure Link is imported
 import Header from "../header.jsx";
 import '../index.css'; 
@@ -28,7 +28,7 @@ export default function Dashboard() {
                 }
 
                 // Fetch student's applications
-                const applicationsRes = await axios.get(`/api/student/applications/${studentId}`, {
+                const applicationsRes = await api.get(`/api/student/applications/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const fetchedApplications = applicationsRes.data.applications;
@@ -37,7 +37,7 @@ export default function Dashboard() {
                 setShortlistedCount(fetchedApplications.filter(app => app.status === 'Shortlisted').length);
 
                 // Fetch student's interviews
-                const interviewsRes = await axios.get(`/api/student/interviews/${studentId}`, {
+                const interviewsRes = await api.get(`/api/student/interviews/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const fetchedInterviews = interviewsRes.data.interviews;

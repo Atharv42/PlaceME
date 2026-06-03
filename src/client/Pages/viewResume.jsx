@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 
@@ -21,7 +21,7 @@ export default function ViewResume() {
                     return;
                 }
 
-                const res = await axios.get(`/api/student/profile/${studentId}`, {
+                const res = await api.get(`/api/student/profile/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 

@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate, Link } from 'react-router-dom';
 
 export default function CompanyRegister() {
@@ -39,7 +39,7 @@ export default function CompanyRegister() {
     }
 
     try {
-      await axios.post("/api/company-register", {
+      await api.post("/api/company-register", {
         companyName,
         companyEmail,
         companyPassword

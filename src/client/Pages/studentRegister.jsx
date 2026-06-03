@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate, Link } from 'react-router-dom'; 
 
 export default function StudentRegister() {
@@ -48,7 +48,7 @@ export default function StudentRegister() {
     }
 
     try {
-      await axios.post("/api/student-register", {
+      await api.post("/api/student-register", {
         firstName,
         lastName,
         email,

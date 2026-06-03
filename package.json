@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "start": "node src/server/server.js",
     "dev": "nodemon src/server/server.js",
     "client": "vite",
     "dev:all": "concurrently \"npm run dev\" \"npm run client\"",

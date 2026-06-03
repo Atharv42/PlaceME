@@ -1,6 +1,6 @@
 ﻿
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { Link } from 'react-router-dom';
 import '../Pages/Login.css'; 
 
@@ -17,7 +17,7 @@ export default function ForgotPassword() {
         setLoading(true);
 
         try {
-            const res = await axios.post('/api/forgot-password', { email });
+            const res = await api.post('/api/forgot-password', { email });
             setMessage(res.data.message); 
         } catch (err) {
             if (err.response && err.response.data && err.response.data.message) {

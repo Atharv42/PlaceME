@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 import '../index.css';
@@ -52,13 +52,13 @@ export default function CompanyDashboard() {
             const email = localStorage.getItem('email'); 
             setCompanyName(email || 'My Company'); 
 
-            const jobsRes = await axios.get(`/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const jobsRes = await api.get(`/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setJobs(jobsRes.data.jobs);
 
-            const appsRes = await axios.get(`/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const appsRes = await api.get(`/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setApplications(appsRes.data.applications);
 
-            const interviewsRes = await axios.get(`/api/company/interviews/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const interviewsRes = await api.get(`/api/company/interviews/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setInterviews(interviewsRes.data.interviews);
 
         } catch (err) {
@@ -100,7 +100,7 @@ export default function CompanyDashboard() {
                 company: companyName 
             };
 
-            const res = await axios.post('/api/jobs', jobData, {
+            const res = await api.post('/api/jobs', jobData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -131,7 +131,7 @@ export default function CompanyDashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.put(
+            const res = await api.put(
                 `/api/applications/${applicationId}/status`,
                 { status: newStatus },
                 { headers: { Authorization: `Bearer ${token}` } }

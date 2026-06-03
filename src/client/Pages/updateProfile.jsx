@@ -1,6 +1,6 @@
 ﻿
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useNavigate } from 'react-router-dom';
 import Header from '../header.jsx'; 
 import '../index.css'; 
@@ -42,7 +42,7 @@ export default function UpdateProfile() {
                     return;
                 }
 
-                const res = await axios.get(`/api/student/profile/${studentId}`, {
+                const res = await api.get(`/api/student/profile/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -115,7 +115,7 @@ export default function UpdateProfile() {
                 
             };
             
-            const res = await axios.put(`/api/student/profile/${studentId}`, updateData, {
+            const res = await api.put(`/api/student/profile/${studentId}`, updateData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -152,7 +152,7 @@ export default function UpdateProfile() {
         uploadFormData.append('resume', selectedFile); 
 
         try {
-            const res = await axios.post(
+            const res = await api.post(
                 `/api/student/profile/${studentId}/upload-resume`,
                 uploadFormData,
                 {

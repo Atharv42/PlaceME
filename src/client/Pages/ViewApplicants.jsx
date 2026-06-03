@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
 import '../index.css';
@@ -23,7 +23,7 @@ export default function ViewApplicants() {
                     return;
                 }
 
-                const res = await axios.get(`/api/jobs/${jobId}/applications`, {
+                const res = await api.get(`/api/jobs/${jobId}/applications`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -55,7 +55,7 @@ export default function ViewApplicants() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.put(
+            const res = await api.put(
                 `/api/applications/${applicationId}/status`,
                 { status: newStatusTrimmed },
                 { headers: { Authorization: `Bearer ${token}` } }

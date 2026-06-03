@@ -21,6 +21,12 @@ dist-ssr
 src/server/uploads/*
 !src/server/uploads/.gitkeep
 
+# Key/certificate files
+*.pem
+*.key
+*.pfx
+*.p12
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

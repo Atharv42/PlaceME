@@ -1,5 +1,5 @@
 ﻿import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api.js';
 import '../index.css';
 
 export default function ScheduleInterviewModal({
@@ -65,7 +65,7 @@ export default function ScheduleInterviewModal({
                 link: interviewData.link,
             };
             
-            const res = await axios.post('/api/interviews', payload, {
+            const res = await api.post('/api/interviews', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
