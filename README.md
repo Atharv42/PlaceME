@@ -94,80 +94,48 @@ cd PlaceME
 
 ### 2. Install Dependencies
 
-#### Install Backend Dependencies
 ```bash
 npm install
-```
-
-#### Install Frontend Dependencies
-```bash
-cd client
-npm install
-cd ..
 ```
 
 ### 3. Environment Configuration
 
-Create a `.env` file in the root directory:
+Create a `.env` file inside `src/server/` with the following variables:
 
 ```env
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-
-# Database
-MONGODB_URI=mongodb://localhost:27017/placeme
-# OR for MongoDB Atlas
-# MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/placeme
-
-# JWT Secret
+MongoDB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/placeme
 JWT_SECRET=your_super_secret_jwt_key_here
-JWT_EXPIRE=7d
-
-# Email Configuration (Optional)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-app-password
-
-# Frontend URL
+EMAIL_USER=your-gmail@gmail.com
+EMAIL_PASS=your-gmail-app-password
+PORT=3000
+API_URL=http://localhost:3000
 CLIENT_URL=http://localhost:5173
 ```
 
-### 4. Database Setup
+> **Note:** For Gmail, generate an [App Password](https://myaccount.google.com/apppasswords) instead of using your account password.
 
-Make sure MongoDB is running:
+### 4. Run the Application
 
+#### Both Frontend & Backend simultaneously:
 ```bash
-# For local MongoDB
-mongod
-
-# The application will automatically create necessary collections
+npm run dev:all
 ```
 
-### 5. Run the Application
+#### Or run separately in two terminals:
 
-#### Development Mode (Both Frontend & Backend)
+**Backend** (port 3000):
 ```bash
 npm run dev
 ```
 
-#### Or Run Separately
-
-**Backend:**
+**Frontend** (port 5173):
 ```bash
-npm run server
-```
-
-**Frontend:**
-```bash
-cd client
-npm run dev
+npm run client
 ```
 
 The application will be available at:
 - **Frontend:** http://localhost:5173
-- **Backend:** http://localhost:5000
+- **Backend API:** http://localhost:3000
 
 ---
 
@@ -199,31 +167,27 @@ The application will be available at:
 
 ```
 PlaceME/
-|
-src/
-├── client/                  # Frontend React application
-│   ├── public/
-│   │   ├── components/     # Reusable components
-│   │   ├── pages/          # Page components
-│   │   ├── services/       # API services
-│   │   ├── context/        # Context API
-│   │   ├── utils/          # Helper functions
-│   │   └── App.jsx         # Main app component
-│   └── package.json
+├── src/
+│   ├── client/                       # Frontend — React + Vite
+│   │   ├── Components/               # Shared modals (ScheduleInterview, UpdateStatus)
+│   │   ├── Pages/                    # All route-level page components
+│   │   ├── header.jsx                # Shared header/nav
+│   │   ├── main.jsx                  # React Router entry point
+│   │   └── index.css                 # Global styles
+│   │
+│   └── server/                       # Backend — Node.js + Express
+│       ├── Controllers/              # Route handler logic
+│       ├── Middleware/               # JWT auth + Joi validation
+│       ├── Routes/                   # Express route definitions
+│       ├── models/                   # Mongoose schemas
+│       ├── uploads/                  # Resume PDF storage (git-ignored)
+│       ├── db.js                     # MongoDB connection
+│       ├── server.js                 # Express app entry point
+│       └── .env                      # Server environment variables (git-ignored)
 │
-├── server/                  # Backend Node.js application
-│   ├── config/             # Configuration files
-│   ├── controllers/        # Route controllers
-│   ├── models/             # Mongoose models
-│   ├── routes/             # API routes
-│   ├── middleware/         # Custom middleware
-│   ├── utils/              # Helper functions
-│   └── server.js           # Entry point
-│
-├── .env                    # Environment variables
-├── .gitignore
-├── package.json
-└── README.md
+├── index.html
+├── vite.config.js
+└── package.json
 ```
 
 ---

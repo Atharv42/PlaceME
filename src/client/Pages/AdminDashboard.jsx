@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
@@ -35,20 +35,20 @@ export default function AdminDashboard() {
             let res;
             switch(viewName) {
                 case 'students':
-                    res = await axios.get('http://localhost:3000/api/admin/students', { headers: { Authorization: `Bearer ${token}` } });
+                    res = await axios.get('/api/admin/students', { headers: { Authorization: `Bearer ${token}` } });
                     setStudents(res.data.students);
                     break;
                 case 'companies':
-                    res = await axios.get('http://localhost:3000/api/admin/companies', { headers: { Authorization: `Bearer ${token}` } });
+                    res = await axios.get('/api/admin/companies', { headers: { Authorization: `Bearer ${token}` } });
                     setCompanies(res.data.companies);
                     break;
                 case 'jobs':
-                    res = await axios.get('http://localhost:3000/api/admin/jobs', { headers: { Authorization: `Bearer ${token}` } });
+                    res = await axios.get('/api/admin/jobs', { headers: { Authorization: `Bearer ${token}` } });
                     setJobs(res.data.jobs);
                     break;
                 case 'stats':
                 default:
-                    res = await axios.get('http://localhost:3000/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } });
+                    res = await axios.get('/api/admin/stats', { headers: { Authorization: `Bearer ${token}` } });
                     setStats(res.data);
                     break;
             }
@@ -81,7 +81,7 @@ export default function AdminDashboard() {
         setError(''); setSuccessMessage('');
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.put(`http://localhost:3000/api/admin/companies/${companyId}/verify`, {}, {
+            const res = await axios.put(`/api/admin/companies/${companyId}/verify`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSuccessMessage(res.data.message);
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
         setError(''); setSuccessMessage('');
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/api/admin/companies/${companyId}`, {
+            await axios.delete(`/api/admin/companies/${companyId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSuccessMessage("Company deleted.");
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
         setError(''); setSuccessMessage('');
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/api/admin/students/${studentId}`, {
+            await axios.delete(`/api/admin/students/${studentId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSuccessMessage("Student deleted.");
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
         setError(''); setSuccessMessage('');
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:3000/api/admin/jobs/${jobId}`, {
+            await axios.delete(`/api/admin/jobs/${jobId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSuccessMessage("Job deleted.");

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from "react-router-dom";
 import Header from '../header.jsx'; 
@@ -40,7 +40,7 @@ export default function BrowseJobs() {
             if (filters.search) params.search = filters.search;
             if (filters.location) params.location = filters.location;
 
-            const jobsRes = await axios.get('http://localhost:3000/api/jobs', {
+            const jobsRes = await axios.get('/api/jobs', {
                 headers: { Authorization: `Bearer ${token}` },
                 params: params 
             });
@@ -51,7 +51,7 @@ export default function BrowseJobs() {
             }
 
             
-            const appsRes = await axios.get(`http://localhost:3000/api/student/applications/${userId}`, {
+            const appsRes = await axios.get(`/api/student/applications/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             const appliedIds = new Set(appsRes.data.applications.map(app => app.jobId));
@@ -99,7 +99,7 @@ export default function BrowseJobs() {
                 studentId: studentId,
             };
 
-            const res = await axios.post('http://localhost:3000/api/apply-job', applicationData, {
+            const res = await axios.post('/api/apply-job', applicationData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             

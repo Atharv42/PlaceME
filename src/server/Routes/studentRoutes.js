@@ -1,6 +1,9 @@
 import express from 'express';
 import multer from 'multer';
-import path from 'path'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const router = express.Router();
 
 import { getStudentProfile, updateStudentProfile, uploadResume } from '../Controllers/studentController.js'; 
@@ -10,7 +13,7 @@ import { StudentProfileUpdateValidation } from '../Middleware/authValidation.js'
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'src/server/uploads/'); 
+        cb(null, path.join(__dirname, '..', 'uploads'));
     },
     filename: function (req, file, cb) {
         

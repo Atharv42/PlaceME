@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
@@ -20,7 +20,7 @@ export default function ViewCompanyProfile() {
                     return;
                 }
 
-                const res = await axios.get(`http://localhost:3000/api/company/profile/${companyId}`, {
+                const res = await axios.get(`/api/company/profile/${companyId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setCompany(res.data.company);

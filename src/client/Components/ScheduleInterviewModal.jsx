@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../client/index.css'; 
+import '../index.css';
 
 export default function ScheduleInterviewModal({
     applicationId,
@@ -65,28 +65,14 @@ export default function ScheduleInterviewModal({
                 link: interviewData.link,
             };
             
-            console.log('Sending interview payload:', payload);
-
-            const res = await axios.post('http://localhost:3000/api/interviews', payload, {
+            const res = await axios.post('/api/interviews', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-           
-            console.log('Interview scheduled successfully! Response:', res.data); 
-           
-
-            alert('Interview scheduled successfully!'); 
+            alert('Interview scheduled successfully!');
             onInterviewScheduled(res.data.interview); 
             onClose(); 
         } catch (err) {
-            
-            console.error('Error scheduling interview:', err); // Log the full error object
-            if (err.response) {
-                console.error('Error response data:', err.response.data);
-                console.error('Error response status:', err.response.status);
-            }
-            
-
             if (err.response && err.response.data && err.response.data.message) {
                 setError(err.response.data.message);
                 

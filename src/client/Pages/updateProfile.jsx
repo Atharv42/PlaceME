@@ -1,4 +1,4 @@
-
+﻿
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -42,7 +42,7 @@ export default function UpdateProfile() {
                     return;
                 }
 
-                const res = await axios.get(`http://localhost:3000/api/student/profile/${studentId}`, {
+                const res = await axios.get(`/api/student/profile/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -115,7 +115,7 @@ export default function UpdateProfile() {
                 
             };
             
-            const res = await axios.put(`http://localhost:3000/api/student/profile/${studentId}`, updateData, {
+            const res = await axios.put(`/api/student/profile/${studentId}`, updateData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
@@ -153,7 +153,7 @@ export default function UpdateProfile() {
 
         try {
             const res = await axios.post(
-                `http://localhost:3000/api/student/profile/${studentId}/upload-resume`,
+                `/api/student/profile/${studentId}/upload-resume`,
                 uploadFormData,
                 {
                     headers: { 

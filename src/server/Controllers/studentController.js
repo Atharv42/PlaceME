@@ -44,7 +44,8 @@ const uploadResume = async (req, res) => {
         }
 
        
-        const resumeUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+        const apiUrl = process.env.API_URL || 'http://localhost:3000';
+        const resumeUrl = `${apiUrl}/uploads/${req.file.filename}`;
 
        
         const updatedStudent = await Student.findByIdAndUpdate(

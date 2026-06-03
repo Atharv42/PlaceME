@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
@@ -52,13 +52,13 @@ export default function CompanyDashboard() {
             const email = localStorage.getItem('email'); 
             setCompanyName(email || 'My Company'); 
 
-            const jobsRes = await axios.get(`http://localhost:3000/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const jobsRes = await axios.get(`/api/company/jobs/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setJobs(jobsRes.data.jobs);
 
-            const appsRes = await axios.get(`http://localhost:3000/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const appsRes = await axios.get(`/api/company/applications/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setApplications(appsRes.data.applications);
 
-            const interviewsRes = await axios.get(`http://localhost:3000/api/company/interviews/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
+            const interviewsRes = await axios.get(`/api/company/interviews/${companyId}`, { headers: { Authorization: `Bearer ${token}` } });
             setInterviews(interviewsRes.data.interviews);
 
         } catch (err) {
@@ -100,7 +100,7 @@ export default function CompanyDashboard() {
                 company: companyName 
             };
 
-            const res = await axios.post('http://localhost:3000/api/jobs', jobData, {
+            const res = await axios.post('/api/jobs', jobData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
@@ -132,7 +132,7 @@ export default function CompanyDashboard() {
         try {
             const token = localStorage.getItem('token');
             const res = await axios.put(
-                `http://localhost:3000/api/applications/${applicationId}/status`,
+                `/api/applications/${applicationId}/status`,
                 { status: newStatus },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

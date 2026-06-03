@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -39,7 +39,7 @@ export default function AdminRegister() {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/admin-register", {
+      await axios.post("/api/admin-register", {
         adminName,
         adminEmail,
         adminPassword

@@ -57,14 +57,7 @@ const getCompanyInterviews = async (req, res) => {
         const interviews = await Interview.find({ companyId: companyId }).sort({ date: 1 }); 
 
        
-        const interviewsWithStudentDetails = await Promise.all(interviews.map(async (interview) => {
-          
-            
-            return {
-                ...interview._doc, // Get all interview properties
-                
-            };
-        }));
+        const interviewsWithStudentDetails = interviews.map(interview => interview.toObject());
 
 
         res.status(200).json({ interviews: interviewsWithStudentDetails });

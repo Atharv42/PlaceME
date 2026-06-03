@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
@@ -36,7 +36,7 @@ export default function EditJob() {
                     return;
                 }
 
-                const res = await axios.get(`http://localhost:3000/api/jobs/${jobId}`, {
+                const res = await axios.get(`/api/jobs/${jobId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -89,7 +89,7 @@ export default function EditJob() {
                 postedDate: new Date().toISOString() 
             };
             
-            const res = await axios.put(`http://localhost:3000/api/jobs/${jobId}`, updatePayload, {
+            const res = await axios.put(`/api/jobs/${jobId}`, updatePayload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
 

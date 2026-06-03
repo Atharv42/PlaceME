@@ -41,7 +41,8 @@ app.use('/api/admin', adminRoutes);
 app.use('/api', companyRoutes);
 
 // Start server
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
     connectDb();
-    console.log('Server started on http://localhost:3000');
+    console.log(`Server started on http://localhost:${PORT}`);
 });

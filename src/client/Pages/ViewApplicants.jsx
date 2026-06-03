@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Header from '../header.jsx';
@@ -23,7 +23,7 @@ export default function ViewApplicants() {
                     return;
                 }
 
-                const res = await axios.get(`http://localhost:3000/api/jobs/${jobId}/applications`, {
+                const res = await axios.get(`/api/jobs/${jobId}/applications`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 
@@ -56,7 +56,7 @@ export default function ViewApplicants() {
         try {
             const token = localStorage.getItem('token');
             const res = await axios.put(
-                `http://localhost:3000/api/applications/${applicationId}/status`,
+                `/api/applications/${applicationId}/status`,
                 { status: newStatusTrimmed },
                 { headers: { Authorization: `Bearer ${token}` } }
             );

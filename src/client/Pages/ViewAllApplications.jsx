@@ -1,4 +1,4 @@
-// src/client/Pages/ViewAllApplications.jsx
+﻿// src/client/Pages/ViewAllApplications.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
@@ -22,7 +22,7 @@ export default function ViewAllApplications() {
                     return;
                 }
 
-                const res = await axios.get(`http://localhost:3000/api/student/applications/${studentId}`, {
+                const res = await axios.get(`/api/student/applications/${studentId}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
 

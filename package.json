@@ -1,11 +1,13 @@
 {
-  "name": "placement-app",
+  "name": "placeme",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "start": "vite",
     "dev": "nodemon src/server/server.js",
+    "client": "vite",
+    "dev:all": "concurrently \"npm run dev\" \"npm run client\"",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -32,6 +34,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
+    "concurrently": "^10.0.3",
     "eslint": "^9.29.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
@@ -39,9 +42,8 @@
     "nodemon": "^3.1.10",
     "vite": "^7.0.0"
   },
-  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "main": "eslint.config.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "description": "A full-stack MERN campus placement management system with role-based dashboards for students, companies, and admins.",
+  "keywords": ["mern", "react", "nodejs", "mongodb", "placement-system", "campus-recruitment"],
+  "author": "Atharv Trivedi",
+  "license": "MIT"
 }

@@ -3,7 +3,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom"; 
 
-import Dashboard from './Pages/dashboard.jsx'; 
+import Dashboard from './Pages/dashboard.jsx';
+import NotFound from './Pages/NotFound.jsx';
 import './index.css';
 import Login from './Pages/login.jsx';
 import Register from './Pages/register.jsx';
@@ -54,7 +55,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/admin-register" element={<AdminRegister />} /> 
         <Route path="/forgot-password" element={<ForgotPassword />} /> 
         <Route path="/reset-password/:token" element={<ResetPassword />} /> 
-        <Route path="*" element={<Home />} /> 
+        <Route path="*" element={<NotFound />} />
 
       
         <Route

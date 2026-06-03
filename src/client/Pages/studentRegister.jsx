@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom'; 
 
@@ -48,7 +48,7 @@ export default function StudentRegister() {
     }
 
     try {
-      await axios.post("http://localhost:3000/api/student-register", {
+      await axios.post("/api/student-register", {
         firstName,
         lastName,
         email,
