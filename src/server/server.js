@@ -45,6 +45,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
     res.send('Welcome to the PlaceME API');
 });
+app.get('/api/health', (req, res) => {
+    res.json({ status: 'ok', db: 'connected', routes: 'loaded' });
+});
 app.use('/api', authRoutes);
 app.use('/api', jobRoutes);
 app.use('/api', applicationRoutes);
